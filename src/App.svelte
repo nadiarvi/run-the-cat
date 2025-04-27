@@ -1,30 +1,45 @@
 <script>
-  import { onMount } from 'svelte';
+    import { onMount } from 'svelte';
+    import { colors } from './theme';
+    import * as World from './World.svelte';
+    import Cat from './Cat.svelte'; //this is the cat component
+    
+    let id;
+    let catComponent;
+    let myp5;
 
-  let id; // the div in the HTML
-  let sprite;
+  
+    const sketch = (p5) => {
 
-  const sketch = (p5) => {
-    p5.setup = async () => {
-      p5.createCanvas(400, 300);
-      sprite = new p5.Sprite();
-      sprite.img = '/assets/monster.png';
-      sprite.diameter = 100;
-      sprite.scale = 0.5;
+        p5.setup = () => {
+            new p5.Canvas(p5.windowWidth, p5.windowHeight);
+        };
+           
+        p5.windowResized = () => {
+            p5.resizeCanvas(p5.windowWidth, p5.windowHeight);
+        };
+
+        p5.draw = () => {
+            p5.clear();
+            p5.background(colors.Pico8Style.primary);
+            p5.ellipse(p5.mouseX, p5.mouseY, 20, 20);
+
+            World.draw(p5);
+        };
+
+        // catPosition = {x: p5.windowWidth / 2, y: p5.windowHeight - 50};
     };
 
-    p5.draw = () => {
-      p5.clear();
-      p5.fill(100);
-      p5.ellipse(p5.mouseX, p5.mouseY, 20, 20);
-      sprite.debug = p5.mouse.pressing();
-    };
-  };
+    // On startup
+    onMount(function () {
+        myp5 = new p5(sketch, id);
+    });
 
-  // On startup
-  onMount(function () {
-    let myp5 = new p5(sketch, id);
-  });
-</script>
-
-<div {id} />
+  </script>
+  
+  <div {id}>
+    {#if myp5}
+        <Cat bind:this={catComponent} {myp5} />
+    {/if}
+  </div>
+  
