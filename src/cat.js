@@ -49,5 +49,12 @@ export class Cat {
       this.sprite.position.y = y;
     };
   };
+
+  remove() {
+    if (!this.sprite) return;
+
+    this.sprite.remove();
+    this.sprite = null;
+  }
 }
   
