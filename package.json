@@ -21,6 +21,7 @@
   "dependencies": {
     "p5": "^1.6.0",
     "p5-svelte": "^3.1.2",
+    "p5.scenemanager": "^1.0.6",
     "p5play": "^3.8.14",
     "sirv-cli": "^2.0.0"
   }
