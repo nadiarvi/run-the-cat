@@ -1,0 +1,41 @@
+console.log("start fresh :)");
+
+import { colors } from './theme.js';
+import StartScene from './scenes/startScene.js';
+import GameScene from './scenes/gameScene.js';
+
+let mgr;
+
+function setup(){
+    createCanvas(windowWidth, windowHeight);
+    textFont('Pixelify Sans', 'sans-serif');
+    textAlign(CENTER);
+    textSize(128);
+
+    mgr = new SceneManager();
+    mgr.addScene(StartScene);
+    mgr.addScene(GameScene);
+    
+    mgr.showScene(StartScene);
+};
+
+function draw(){
+    background(colors.primary);
+    mgr.draw();
+};
+
+function windowResized() {
+  resizeCanvas(windowWidth, windowHeight);
+  mgr.handleEvent('onResize');
+};
+
+
+function mousePressed(){
+    mgr.handleEvent('mousePressed');
+};
+
+
+window.setup = setup;
+window.draw = draw;
+window.windowResized = windowResized;
+window.mousePressed = mousePressed;
