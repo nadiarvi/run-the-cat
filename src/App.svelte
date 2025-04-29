@@ -1,8 +1,8 @@
 <script>
+    console.log('this is the app screen');
     import { onMount } from 'svelte';
     import { colors } from './theme';
     
-    document.documentElement.style.setProperty('--primary-color', colors.primary);
     import * as World from './World.svelte';
     import Cat from './Cat.svelte'; //this is the cat component
     
@@ -43,7 +43,9 @@
             p5.fill(colors.tertiary);
 
             // p5.ellipse(p5.mouseX, p5.mouseY, 20, 20);
-            World.draw(p5, World.groundHeight = 100);
+            // World.draw(p5, World.groundHeight = 100);
+            p5.fill(colors.secondary);
+            p5.rect(0, p5.height - 100, p5.width, 100);
         };
     };
 
