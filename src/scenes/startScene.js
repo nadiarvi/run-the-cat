@@ -1,5 +1,6 @@
 import { colors } from '../theme.js';
 import { Cat } from '../cat.js';
+import GameScene from './gameScene.js';
 
 export default function StartScene() {
   let cat;
@@ -9,6 +10,8 @@ export default function StartScene() {
     width: 0,
     height: 0,
   };
+
+  // this.name = "StartScene";
 
   this.setup = () => {
     cat = new Cat(width / 2, height - 200, 200);
@@ -64,7 +67,14 @@ export default function StartScene() {
     if (x < button.x || x > button.x + button.width) return;
     if (y < button.y || y > button.y + button.height) return;
 
-    this.sceneManager.showNextScene();
+    this.sceneManager.showScene(GameScene);
     
   };
+
+  this.exit = function () {
+    if (cat) {
+      cat.remove()
+    }
+  };
+  
 }

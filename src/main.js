@@ -1,5 +1,3 @@
-console.log("start fresh :)");
-
 import { colors } from './theme.js';
 import StartScene from './scenes/startScene.js';
 import GameScene from './scenes/gameScene.js';
@@ -15,7 +13,6 @@ function setup(){
     mgr = new SceneManager();
     mgr.addScene(StartScene);
     mgr.addScene(GameScene);
-    
     mgr.showScene(StartScene);
 };
 
