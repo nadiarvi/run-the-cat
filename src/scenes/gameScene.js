@@ -38,14 +38,14 @@ export default function GameScene() {
 
     steps = new ControlPanel({
       name: 'steps',
-      x: width / 32 * 12,
+      x: width / 32 * 7 + 48 * 4,
       y: height / 32,
       numBoxes: 6
     });
 
     loops = new ControlPanel({
       name: 'loop',
-      x: width / 32 * 21,
+      x: width / 32 * 7 + 48 * 11.5,
       y: height / 32,
       numBoxes: 4
     })
@@ -67,13 +67,15 @@ export default function GameScene() {
     fill(colors.secondary);
     rect(width / 2, height - 100 / 2, width, 80);
 
-    // Sprite
-    cat.draw();
     runButton.draw();
     blocks.draw();
     steps.draw();
     loops.draw();
-
+    
+    // Sprite
+    camera.on();
+    cat.draw();
+    camera.off();
   };
 
   this.onResize = () => {
@@ -81,5 +83,16 @@ export default function GameScene() {
     runButton.setPosition((width / 16) * 15, height / 16);
     blocks.setPosition(width / 32, height / 32);
     steps.setPosition((width / 32) * 4, height / 32);
+  }
+
+  this.keyPressed = () => {
+    const _key = key;
+    console.log(`key passed: ${_key}`);
+    if (_key == "ArrowRight") {
+      cat.keyPressed(_key);
+    } else {
+      cat.changeAni(_key);
+    }
+    
   }
 }

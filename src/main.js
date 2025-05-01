@@ -36,9 +36,14 @@ function preload(){
     Arrow.preload();
 }
 
+function keyPressed(){
+    mgr.handleEvent('keyPressed');
+}
+
 
 window.setup = setup;
 window.draw = draw;
-window.windowResized = windowResized;
+// window.windowResized = windowResized;
 window.mousePressed = mousePressed;
 window.preload = preload;
+window.keyPressed = keyPressed;

@@ -6,6 +6,7 @@ export class Cat {
     this.targetSize = targetSize;
     this.sprite = null;
     this.loaded = false;
+    this.velocity = 24;
 
     loadImage('assets/cat.webp', (img) => {
       this.sprite = new Sprite(this.x, this.y, this.size, this.size);
@@ -39,8 +40,29 @@ export class Cat {
     if (this.sprite) this.sprite.draw();
   };
 
-  changeAni(name) {
-    if (this.sprite) this.sprite.changeAni(name);
+  changeAni(key) {
+    if (!this.sprite) return;
+    console.log('changing animation...');
+    console.log(key);
+    switch (key) {
+      case 'w':
+        this.sprite.changeAni("walk");
+        break;
+      case 'j':
+        this.sprite.changeAni("jump");
+        break;
+      case 'i':
+        this.sprite.changeAni("idle");
+        break;
+      case 'h':
+        this.sprite.changeAni("hurt");
+        break;
+      case 'd':
+        this.sprite.changeAni("death");
+        break;
+      default:
+        break;
+    };
   };
 
   setPosition(x, y) {
@@ -50,11 +72,37 @@ export class Cat {
     };
   };
 
+  moveRight() {
+    if (this.x + this.targetSize >= width) {
+      this.x = width - this.targetSize; // Ensure it doesn't go beyond the boundary
+      this.setPosition(this.x, this.y);
+      this.changeAni('i'); // Optionally change to idle if boundary reached
+      return;
+    }
+    this.x += this.velocity;  // Keep moving
+    this.setPosition(this.x, this.y);
+    console.log(`sprite's actual position: ${this._getSpritePosition()}`)
+    this.changeAni('w'); // Keep walking animation
+  }
+
+  keyPressed(key) {
+    if (key === 'ArrowRight') {
+      this.moveRight();
+    }
+  }
+  
+
   remove() {
     if (!this.sprite) return;
 
     this.sprite.remove();
     this.sprite = null;
+  }
+
+  // helper
+  _getSpritePosition(){
+    console.log(`sprite's actual position: ${this.sprite.x}, ${this.sprite.y}`);
+    return (this.sprite.x, this.sprite.y);
   }
 }
   
