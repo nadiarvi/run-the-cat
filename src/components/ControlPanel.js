@@ -28,16 +28,16 @@ export class ControlPanel {
         // Label
         fill(colors.tertiary);
         noStroke();
-        rect(this.x, this.y, this.getPanelWidth(), this.getTextBoxHeight(), 5);
+        rect(this.x, this.y, this._getPanelWidth(), this._getTextBoxHeight(), 5);
         fill(colors.secondary);
         textAlign(CENTER, CENTER);
         textSize(this.fontSize);
-        text(this.name, this.x + this.getPanelWidth() / 2, this.y + this.getTextBoxHeight() /2);
+        text(this.name, this.x + this._getPanelWidth() / 2, this.y + this._getTextBoxHeight() /2);
 
         // White panel
         fill(255);
         noStroke();
-        rect(this.x, this.y + 24 + this.gap, this.getPanelWidth(), this.boxHeight + this.boxSpacing, 6);
+        rect(this.x, this.y + 24 + this.gap, this._getPanelWidth(), this.boxHeight + this.boxSpacing, 6);
 
         // Boxes
         for (let i = 0; i < this.numBoxes; i++) {
@@ -58,17 +58,21 @@ export class ControlPanel {
             } else {
                 this.empty.draw(bx + this.boxWidth / 2 - 20, by + this.boxHeight / 2 - 20);
             }
-        }
-        
-
-        
+        }        
     }
 
-    getPanelWidth() {
+    setPosition(x, y){
+        blocks.x = x;
+        blocks.y = y;
+    }
+
+
+    //helper functions
+    _getPanelWidth() {
         return this.numBoxes * (this.boxWidth + this.boxSpacing) + 12;
     }
 
-    getTextBoxHeight(){
+    _getTextBoxHeight(){
         return this.fontSize + 16;
     }
 }
