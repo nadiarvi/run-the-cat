@@ -1,6 +1,6 @@
-import { colors } from '../theme.js';
+import { colors } from '../utils/theme.js';
 import { Cat } from '../cat.js';
-import { drawRect } from '../utils/draw.js';
+import { buttonL } from '../utils/theme.js';
 import GameScene from './gameScene.js';
 
 export default function StartScene() {
@@ -13,7 +13,7 @@ export default function StartScene() {
   };
   let startButton;
 
-  // this.name = "StartScene";
+  this.name = "StartScene";
 
   this.setup = () => {
     cat = new Cat(width / 2, height - 200, 200);
@@ -25,24 +25,24 @@ export default function StartScene() {
     startButton.locate(width/2, height/2 + 50);
 
     // Size
-    startButton.width = 300;
-    startButton.height = 75;
+    startButton.width = buttonL.width;
+    startButton.height = buttonL.height;
 
     // Visual styling
-    startButton.color = colors.tertiary;
-    startButton.stroke = colors.secondary;
-    startButton.strokeWeight = 3;
+    startButton.color = buttonL.color;
+    startButton.stroke = buttonL.stroke;
+    startButton.strokeWeight = buttonL.strokeWeight;
 
     // Text properties
     startButton.text = 'start';
-    startButton.textFont = "Pixelify Sans";
-    startButton.textSize = 32;
-    startButton.textColor = colors.secondary;
+    startButton.textFont = buttonL.textFont;
+    startButton.textSize = buttonL.textSize;
+    startButton.textColor = buttonL.textColor;
 
     startButton.onPress = () => {
       console.log("press");
       this.sceneManager.showScene(GameScene);
-    }
+    };
   };
 
   this.draw = () => {
@@ -89,19 +89,9 @@ export default function StartScene() {
   this.onResize = () => {
     if (cat) {
       cat.setPosition(width / 2, height - 200);
+      startButton.locate(width/2, height/2 + 50);
     }
   }
-  
-
-  this.mousePressed = function (){
-    const x = mouseX;
-    const y = mouseY;
-
-    return;
-
-    this.sceneManager.showScene(GameScene);
-    
-  };
 
   this.exit = function () {
     if (cat) {

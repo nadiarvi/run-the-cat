@@ -1,4 +1,4 @@
-import { colors } from './theme.js';
+import { colors } from './utils/theme.js';
 
 export const groundHeight = 100;
 

@@ -1,4 +1,5 @@
-import { colors } from './theme.js';
+import { colors } from './utils/theme.js';
+import { Arrow } from './components/Arrow.js';
 import StartScene from './scenes/startScene.js';
 import GameScene from './scenes/gameScene.js';
 
@@ -13,7 +14,7 @@ function setup(){
     mgr = new SceneManager();
     mgr.addScene(StartScene);
     mgr.addScene(GameScene);
-    mgr.showScene(StartScene);
+    mgr.showScene(GameScene);
 };
 
 function draw(){
@@ -31,8 +32,13 @@ function mousePressed(){
     mgr.handleEvent('mousePressed');
 };
 
+function preload(){
+    Arrow.preload();
+}
+
 
 window.setup = setup;
 window.draw = draw;
 window.windowResized = windowResized;
 window.mousePressed = mousePressed;
+window.preload = preload;
