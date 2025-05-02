@@ -2,6 +2,7 @@ import { colors } from './utils/theme.js';
 import { Arrow } from './components/Arrow.js';
 import StartScene from './scenes/startScene.js';
 import GameScene from './scenes/gameScene.js';
+import { ClickableArrow } from './components/ClickableArrow.js';
 
 let mgr;
 
@@ -30,16 +31,17 @@ function windowResized() {
 
 function mousePressed(){
     mgr.handleEvent('mousePressed');
+    gameScene.handleClick(mouseX, mouseY);
 };
 
 function preload(){
     Arrow.preload();
+    ClickableArrow.preload();
 }
 
 function keyPressed(){
     mgr.handleEvent('keyPressed');
 }
-
 
 window.setup = setup;
 window.draw = draw;

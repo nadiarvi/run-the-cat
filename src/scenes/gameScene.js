@@ -3,7 +3,7 @@ import { Cat } from '../cat.js';
 import { buttonS } from '../utils/theme.js';
 import { MyButton } from '../utils/components.js';
 import { Arrow } from '../components/Arrow.js';
-import { CLickableArrow } from '../components/Arrow2.js';
+import { ClickableArrow } from '../components/ClickableArrow.js';
 import { ControlPanel } from '../components/controlPanel.js';
 
 
@@ -27,7 +27,7 @@ export default function GameScene() {
     cat = new Cat(width / 6, height - 167.5, 150);
 
     // test
-    clickArrow = new CLickableArrow('up', true);
+    clickArrow = new ClickableArrow('up', true);
 
     runButton = new MyButton({
       x: width / 32 * 28.5,
@@ -63,8 +63,10 @@ export default function GameScene() {
 
     blocks.setContents([
       new Arrow('right'),
-      new Arrow('up')
+      // new Arrow('up')
+      new ClickableArrow('up', true),
     ]);
+
 
   };
 
@@ -109,5 +111,13 @@ export default function GameScene() {
     } else {
       cat.changeAni(_key);
     }
+  }
+
+  this.handleClick = function(mx, my) {
+    this.arrows.forEach(arrow => {
+      if (arrow.clickable) {
+        arrow.handleClick(mx, my);
+      }
+    });
   }
 }

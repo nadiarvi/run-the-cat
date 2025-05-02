@@ -1,4 +1,5 @@
 import { Arrow } from "./Arrow";
+import { ClickableArrow } from "./ClickableArrow";
 import { colors } from "../utils/theme";
 
 export class ControlPanel {
@@ -53,6 +54,10 @@ export class ControlPanel {
             if (this.contents[i]) {
                 if (this.contents[i] instanceof Arrow) {
                     this.contents[i].draw(bx + this.boxWidth/2 - 20, by + this.boxHeight/2 - 20);
+                } else if (this.contents[i] instanceof ClickableArrow) {
+                    this.contents[i].draw(bx + this.boxWidth/2 - 20, by + this.boxHeight/2 - 20);
+                } else {
+                    console.error('Invalid content type:', this.contents[i]);
                 }
             } else {
                 this.empty.draw(bx + this.boxWidth / 2 - 20, by + this.boxHeight / 2 - 20);
