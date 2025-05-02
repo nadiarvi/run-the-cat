@@ -3,6 +3,7 @@ import { Cat } from '../cat.js';
 import { buttonS } from '../utils/theme.js';
 import { MyButton } from '../utils/components.js';
 import { Arrow } from '../components/Arrow.js';
+import { CLickableArrow } from '../components/Arrow2.js';
 import { ControlPanel } from '../components/controlPanel.js';
 
 
@@ -12,11 +13,21 @@ export default function GameScene() {
   let blocks;
   let steps;
   let loops;
+  let clickArrow;
+
+  const slots = {
+    blocks: 2,
+    steps: 6,
+    loop: 3,
+  }
 
   this.name = "GameScene";
 
   this.setup = () => {
     cat = new Cat(width / 6, height - 167.5, 150);
+
+    // test
+    clickArrow = new CLickableArrow('up', true);
 
     runButton = new MyButton({
       x: width / 32 * 28.5,
@@ -30,25 +41,30 @@ export default function GameScene() {
     });
 
     blocks = new ControlPanel({
-      name: 'building blocks',
+      name: 'blocks',
       x: width / 32 * 7,
       y: height / 32,
-      numBoxes: 3
+      numBoxes: 2
     });
 
     steps = new ControlPanel({
       name: 'steps',
-      x: width / 32 * 7 + 48 * 4,
+      x: width / 32 * 7 + 48 * (slots.blocks + 1),
       y: height / 32,
       numBoxes: 6
     });
 
     loops = new ControlPanel({
       name: 'loop',
-      x: width / 32 * 7 + 48 * 11.5,
+      x: width / 32 * 7 + 48 * (slots.blocks + slots.steps + 2.75),
       y: height / 32,
       numBoxes: 4
-    })
+    });
+
+    blocks.setContents([
+      new Arrow('right'),
+      new Arrow('up')
+    ]);
 
   };
 
@@ -93,6 +109,5 @@ export default function GameScene() {
     } else {
       cat.changeAni(_key);
     }
-    
   }
 }

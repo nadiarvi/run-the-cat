@@ -16,6 +16,11 @@ export class ControlPanel {
         this.gap = this.fontSize;
     }
 
+    setContents(contents){
+        this.contents = contents;
+        console.log(this.contents);
+    }
+
     updateBox(index, content) {
         if (index >= 0 && index < this.numBoxes) {
             this.contents[index] = content;
@@ -41,14 +46,8 @@ export class ControlPanel {
 
         // Boxes
         for (let i = 0; i < this.numBoxes; i++) {
-            const bx = this.x + 12 + i * (this.boxWidth + this.boxSpacing);
+            const bx = this.x + 10 + i * (this.boxWidth + this.boxSpacing);
             const by = this.y + 24 + this.gap + (this.boxSpacing * 1) / 2;
-            
-            // Draw box
-            // fill(255);
-            // stroke(0);
-            // strokeWeight(1.5);
-            // rect(bx, by, this.boxWidth, this.boxHeight, 4);
 
             // Draw content if it exists
             if (this.contents[i]) {
