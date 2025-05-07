@@ -8,6 +8,7 @@ let mgr;
 
 function setup(){
     createCanvas(windowWidth, windowHeight);
+    console.log(`window size: ${windowWidth}x${windowHeight}`);
     textFont('Pixelify Sans', 'sans-serif');
     textAlign(CENTER);
     textSize(128);
@@ -21,6 +22,9 @@ function setup(){
 function draw(){
     background(colors.primary);
     mgr.draw();
+
+    // custom event handler, manually called
+    // mgr.handleEvent('keyPressing');
 };
 
 function windowResized() {
@@ -28,10 +32,8 @@ function windowResized() {
   mgr.handleEvent('onResize');
 };
 
-
 function mousePressed(){
     mgr.handleEvent('mousePressed');
-    gameScene.handleClick(mouseX, mouseY);
 };
 
 function preload(){
@@ -43,9 +45,10 @@ function keyPressed(){
     mgr.handleEvent('keyPressed');
 }
 
+
 window.setup = setup;
 window.draw = draw;
-// window.windowResized = windowResized;
 window.mousePressed = mousePressed;
 window.preload = preload;
 window.keyPressed = keyPressed;
+

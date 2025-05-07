@@ -11,15 +11,14 @@ export class ControlPanel {
         this.boxWidth = 48;
         this.boxHeight = 48;
         this.boxSpacing = 8;
-        this.contents = Array(numBoxes).fill(null);
-        this.empty = new Arrow('empty');
+        this.contents = Array(numBoxes).fill(null).map(() => new ClickableArrow('empty', true));
+        this.empty = new ClickableArrow('empty', true);
         this.fontSize = 20;
         this.gap = this.fontSize;
     }
 
     setContents(contents){
         this.contents = contents;
-        console.log(this.contents);
     }
 
     updateBox(index, content) {

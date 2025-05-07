@@ -1,5 +1,5 @@
 import { colors } from '../utils/theme.js';
-import { Cat } from '../cat.js';
+import { Cat } from '../_cat.js';
 import { buttonL } from '../utils/theme.js';
 import GameScene from './gameScene.js';
 

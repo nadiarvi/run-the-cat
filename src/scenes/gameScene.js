@@ -8,12 +8,33 @@ import { ControlPanel } from '../components/controlPanel.js';
 
 
 export default function GameScene() {
+  const groundHeight = 100;
+  const worldHeight = windowHeight - groundHeight;
+  const catSize = 150;
+  const worldBlockSize = 100;
+
   let cat;
   let runButton;
   let blocks;
   let steps;
   let loops;
   let clickArrow;
+
+  let clicked;
+
+  let selectedStepIndex = null;
+  
+  const buildingBlocks = [
+    new ClickableArrow('up', false),
+    new ClickableArrow('right', false),
+  ];
+  
+  // changed on user input
+  let selectedSteps;
+  let selectedBlock;
+
+  // selectedSteps = ['up', 'right', 'up', 'up', 'right', 'down'];
+  // selectedSteps = selectedSteps.map((e) => new ClickableArrow(e, true));
 
   const slots = {
     blocks: 2,
@@ -24,10 +45,7 @@ export default function GameScene() {
   this.name = "GameScene";
 
   this.setup = () => {
-    cat = new Cat(width / 6, height - 167.5, 150);
-
-    // test
-    clickArrow = new ClickableArrow('up', true);
+    cat = new Cat(width / 4, height - 175 - 2, catSize);
 
     runButton = new MyButton({
       x: width / 32 * 28.5,
@@ -35,9 +53,7 @@ export default function GameScene() {
       text: "run >>",
       mode: "CORNER",
       style: buttonS,
-      onPress: () => {
-        console.log("Run button pressed");
-      }
+      onPress: () => cat.run(steps.contents),
     });
 
     blocks = new ControlPanel({
@@ -46,6 +62,7 @@ export default function GameScene() {
       y: height / 32,
       numBoxes: 2
     });
+    blocks.setContents(buildingBlocks);
 
     steps = new ControlPanel({
       name: 'steps',
@@ -53,21 +70,14 @@ export default function GameScene() {
       y: height / 32,
       numBoxes: 6
     });
+    
 
-    loops = new ControlPanel({
-      name: 'loop',
-      x: width / 32 * 7 + 48 * (slots.blocks + slots.steps + 2.75),
-      y: height / 32,
-      numBoxes: 4
-    });
-
-    blocks.setContents([
-      new Arrow('right'),
-      // new Arrow('up')
-      new ClickableArrow('up', true),
-    ]);
-
-
+    // loops = new ControlPanel({
+    //   name: 'loop',
+    //   x: width / 32 * 7 + 48 * (slots.blocks + slots.steps + 2.75),
+    //   y: height / 32,
+    //   numBoxes: 4
+    // });
   };
 
   this.draw = () => {
@@ -78,22 +88,38 @@ export default function GameScene() {
     stroke(colors.secondary);
     strokeWeight(7);
     textAlign(LEFT, TOP);
-    text('lvl.3', width / 32, height /32 - 4);
+    text('lvl.1', width / 32, height /32 - 4);
 
     // Ground
-    rectMode(CENTER);
+    rectMode(CORNER);
     fill(colors.secondary);
-    rect(width / 2, height - 100 / 2, width, 80);
+    rect(0, height - groundHeight, width, groundHeight);
+
+    console.log(`ground is drawn at (0, ${height - groundHeight}) with size of ${width}x${groundHeight}`)
+
+    // Obstacle
+    console.log(`world size: ${windowWidth}, ${windowHeight}`);
+    for (let y = windowHeight - groundHeight - 2; y > 0; y -= worldBlockSize) {
+      for (let x = 0; x < width ; x += worldBlockSize) {
+        stroke(0)
+        strokeWeight(1)
+        noFill()
+        rect(x, y, worldBlockSize, worldBlockSize);
+        textSize(24);
+        const x_cnt = Math.floor(x / worldBlockSize);
+        const y_cnt = Math.floor(y / worldBlockSize);
+        const txt = `${x_cnt}, ${y_cnt}`;
+        text(txt, x + 8, y + 8);
+      }
+    }
 
     runButton.draw();
     blocks.draw();
     steps.draw();
-    loops.draw();
+    // loops.draw();
     
     // Sprite
-    camera.on();
     cat.draw();
-    camera.off();
   };
 
   this.onResize = () => {
@@ -104,20 +130,45 @@ export default function GameScene() {
   }
 
   this.keyPressed = () => {
+    console.log(`key: ${key}, keyCode: ${keyCode}`);
+
     const _key = key;
     console.log(`key passed: ${_key}`);
-    if (_key == "ArrowRight") {
-      cat.keyPressed(_key);
+
+    if (keyCode === ESCAPE) {
+        // Deselect the currently selected arrow if any
+        if (selectedStepIndex !== null && steps.contents[selectedStepIndex]) {
+            steps.contents[selectedStepIndex].selected = false;
+        }
+        selectedStepIndex = null;
     } else {
-      cat.changeAni(_key);
+        cat.keyPressed(key);
     }
   }
 
-  this.handleClick = function(mx, my) {
-    this.arrows.forEach(arrow => {
-      if (arrow.clickable) {
-        arrow.handleClick(mx, my);
+  this.mousePressed = function() {
+    console.log(`canvas clicked at ${mouseX}, ${mouseY}`);
+
+    steps.contents.forEach((arrow, index) => {
+      if (arrow._isMouseOver(mouseX, mouseY)) {
+        selectedStepIndex = index;
+        steps.contents.forEach(a => a.selected = false);
+        arrow.select();
       }
     });
-  }
+
+    blocks.contents.forEach((arrow) => {
+      if (arrow._isMouseOver(mouseX, mouseY)) {
+        // console.log("Clicked arrow", arrow.direction);
+        if (selectedStepIndex !== null) {
+          const selectedArrow = steps.contents[selectedStepIndex];
+          selectedArrow.set(arrow.direction);
+          selectedArrow.clickable = true;
+          selectedArrow.selected = false;
+          selectedStepIndex = null;
+        }
+      }
+    });
+
+  };  
 }

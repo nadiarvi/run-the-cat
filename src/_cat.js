@@ -7,15 +7,7 @@ export class Cat {
     this.sprite = null;
     this.loaded = false;
     this.velocity = 24;
-
-    this.steps = [];
-
-    this.currentStepIndex = 0;
-    this.isMoving = false;
-    this.stepTimer = 0;
-    this.stepDuration = 40; // frames to complete one movement
-    this.moveDirection = null;
-
+    this.count = 0;
 
     loadImage('assets/cat.webp', (img) => {
       this.sprite = new Sprite(this.x, this.y, this.size, this.size);
@@ -39,81 +31,25 @@ export class Cat {
   }
   
   update() {
-    // if (!this.sprite) return;
-    if (!this.sprite || this.steps.length === 0) return;
+    if (!this.sprite) return;
     console.log(`updating sprite...`);
 
-    if (this.isMoving) {
-      this._continueMovement();
-    } else if (this.currentStepIndex < this.steps.length) {
-      this._startMovement(this.steps[this.currentStepIndex]);
-    }
-
     this.sprite.position.x = this.x;
     this.sprite.position.y = this.y;
 
-    // console.log(`steps to run: ${this.steps}`);
-
-    this._handleInput();
-    
+    if (kb.pressing('left')) {
+      console.log("accepting pressed kb");
+      this.sprite.vel.x = -1;
+    } else if (kb.pressing('right')) {
+      this.sprite.vel.x = 1;
+    } else {
+      this.sprite.vel.x = 0;  // Stop the hero if no keys are pressed
+    }
   };
-
-  update() {
-    if (!this.sprite || this.steps.length === 0) return;
-  
-    if (this.isMoving) {
-      this._continueMovement();
-    } else if (this.currentStepIndex < this.steps.length) {
-      this._startMovement(this.steps[this.currentStepIndex]);
-    }
-  
-    this.sprite.position.x = this.x;
-    this.sprite.position.y = this.y;
-  }
-  
-
-  run(steps) {
-    this.steps = steps.map(e => e.direction);
-    this.currentStepIndex = 0;
-    this.isMoving = false;
-  }
-
-  _startMovement(direction) {
-    this.moveDirection = direction;
-    this.stepTimer = 0;
-    this.isMoving = true;
-  
-    if (direction === 'right') {
-      this.changeAni('w');
-    } else if (direction === 'up' || direction === 'down') {
-      this.changeAni('j');
-    }
-  }
-
-  _continueMovement() {
-    this.stepTimer++;
-  
-    const delta = this.velocity / this.stepDuration;
-  
-    if (this.moveDirection === 'right') this.x += delta;
-    if (this.moveDirection === 'up') this.y -= delta;
-    if (this.moveDirection === 'down') this.y += delta;
-  
-    if (this.stepTimer >= this.stepDuration) {
-      this.isMoving = false;
-      this.currentStepIndex++;
-      this.changeAni('i'); // back to idle after each move
-    }
-  }
-  
-
-  keyPressed(key) {
-    console.log(`receiving keyboard input: ${key}`);
-  }
 
   draw() {
     if (!this.sprite) return;
-    this.update();
+    // this.sprite.draw();
     this.sprite.update();
   };
 
@@ -148,16 +84,52 @@ export class Cat {
     };
   };
 
+  keyPressed(key) {
+    if (key === 'ArrowRight') {
+      this.moveRight();
+    }
+  }
+  
+
   remove() {
     if (!this.sprite) return;
+
     this.sprite.remove();
     this.sprite = null;
+  }
+
+  /// i want to add this part to move sprite across the canvas when user presses right arrow
+  // if (kb.presses('right')) {
+  //   this.move(30, 'right', 3)
+  // }
+
+  move(direction){
+    if (!direction) return;
+    console.log(`entered move method`);
+    if (direction == "right") this.moveRight();
+    if (direction == "up") this.moveUp();
+  }
+
+  moveRight(){
+    console.log(`${this.count}`);
+    this.changeAni('w')
+    this.sprite.vel.x = 1;
+    this.count += 1;
   }
 
   moveUp(){
     console.log(`sprite should move up...`);
     this.changeAni('j')
   }
+
+  runCat(steps){
+    steps.forEach(element => {
+      setTimeout(() => {
+        console.log(element)
+      }, 1000);
+    });
+  }
+
 
   // helper
   _getSpritePosition(){
@@ -182,10 +154,6 @@ export class Cat {
       default:
         break;
     }
-  }
-
-  _handleInput(){
-    console.log('assume i have something....');
   }
 }
   
