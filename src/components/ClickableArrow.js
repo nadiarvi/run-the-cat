@@ -12,7 +12,6 @@ export class ClickableArrow {
   }
 
   constructor(direction, clickable = false) {
-    console.log(`constructing a new clickable arrow....`);
     this.direction = direction;
     this.image = ClickableArrow.images[direction];
     this.clickable = clickable;

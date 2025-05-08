@@ -3,6 +3,7 @@ const colors = {
   secondary: "#ff4f64",
   tertiary: "#fff29d",
   accent: "#a4e4b6",
+  darkRed: "#C0404F"
 };
 
 const button = {

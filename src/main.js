@@ -8,7 +8,7 @@ let mgr;
 
 function setup(){
     createCanvas(windowWidth, windowHeight);
-    console.log(`window size: ${windowWidth}x${windowHeight}`);
+    world.gravity.y = 50;
     textFont('Pixelify Sans', 'sans-serif');
     textAlign(CENTER);
     textSize(128);
