@@ -7,7 +7,7 @@ export class Cat {
     this.targetSize = targetSize;
     this.sprite = null;
     this.loaded = false;
-    this.velocity = 3.5;
+    this.velocity = 4;
     this.ground = groundRef;
     this.obstacles = obstacleRefs;
     this.blockSize = worldBlockSize;
@@ -51,7 +51,7 @@ export class Cat {
       this.sprite.scale = scaleFactor;
       
       this.shiftOffset = this.targetSize - this.sprite.width * this.sprite.scale;
-      this.sprite.anis.offset.x = this.shiftOffset;
+      this.sprite.anis.offset.x = this.shiftOffset + 50;
       // this.sprite.anis.offset.x = 100;
 
 
@@ -217,13 +217,13 @@ export class Cat {
   
     if (this.moveDirection === 'right') {
       this.changeAni('w');
-      this.sprite.vel.x = this.velocity;
+      this.sprite.vel.x = this.velocity - 0.70;
       this.lastDirection = 'right';
     }
   
     if (this.moveDirection === 'left') {
       this.changeAni('w');
-      this.sprite.vel.x = -this.velocity;
+      this.sprite.vel.x = -this.velocity - 0.70;
       this.lastDirection = 'left';
     }
   
@@ -232,9 +232,9 @@ export class Cat {
       this.sprite.vel.y = -20;
   
       if (this.lastDirection === 'right') {
-        this.sprite.vel.x = this.velocity;
+        this.sprite.vel.x = this.velocity + 0.20;
       } else if (this.lastDirection === 'left') {
-        this.sprite.vel.x = -this.velocity;
+        this.sprite.vel.x = -this.velocity + 0.20;
       } else {
         this.sprite.vel.x = 0;
       }
