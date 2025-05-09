@@ -1,8 +1,10 @@
 import { colors } from './utils/theme.js';
 import { Arrow } from './components/Arrow.js';
+import { ClickableArrow } from './components/ClickableArrow.js';
 import StartScene from './scenes/startScene.js';
 import GameScene from './scenes/gameScene.js';
-import { ClickableArrow } from './components/ClickableArrow.js';
+import Level1 from './scenes/lvl1.js';
+
 
 let mgr;
 
@@ -16,7 +18,8 @@ function setup(){
     mgr = new SceneManager();
     mgr.addScene(StartScene);
     mgr.addScene(GameScene);
-    mgr.showScene(GameScene);
+    mgr.addScene(Level1);
+    mgr.showScene(Level1);
 };
 
 function draw(){

@@ -2,7 +2,6 @@ export class Cat {
   constructor(x, y, targetSize, groundRef, obstacleRefs, worldBlockSize) {
     this.x = x;
     this.y = y;
-    // this.size = 171;
     this.size = 0;
     this.targetSize = targetSize;
     this.sprite = null;
@@ -19,21 +18,18 @@ export class Cat {
     this.currentStepIndex = 0;
     this.isMoving = false;
     this.stepTimer = 0;
-    this.stepDuration = 40; // frames to complete one movement
+    this.stepDuration = 40;
     this.moveDirection = null;
     this.lastDirection = null;
 
     this.hasJumped = false;
 
     loadImage('assets/cat.webp', (img) => {
-      // debugging
-      // console.log(`loaded image size: ${img.width} x ${img.height}`);
-      // console.log(`one sprite size: ${img.height / 5}`);
       this.size = img.height / 5;
 
       this.sprite = new Sprite(this.x, this.y, this.size, this.size, 'dynamic');
       this.sprite.rotationLock = true;
-      this.sprite.bounciness = 0;
+      this.sprite.bounciness = 0.1;
       this.sprite.spriteSheet = img;
       this.sprite.anis.offset.y = 3;
       this.sprite.anis.frameDelay = 8;
@@ -51,9 +47,8 @@ export class Cat {
       this.sprite.scale = scaleFactor;
       
       this.shiftOffset = this.targetSize - this.sprite.width * this.sprite.scale;
-      this.sprite.anis.offset.x = this.shiftOffset + 50;
-      // this.sprite.anis.offset.x = 100;
-
+      this.sprite.anis.offset.x = this.shiftOffset + this.targetSize / 4;
+      // this.sprite.anis.offset.x = this.targetSize / 4;
 
       this.loaded = true;
     });
@@ -72,17 +67,6 @@ export class Cat {
     this._handleInput();
   };
 
-  // update() {
-  //   if (!this.sprite || this.steps.length === 0) return;
-  
-  //   if (this.isMoving) {
-  //     this._continueMovement();
-  //   } else if (this.currentStepIndex < this.steps.length) {
-  //     this._startMovement(this.steps[this.currentStepIndex]);
-  //   }
-  // }
-  
-
   run(steps) {
     this.steps = steps.map(e => e.direction);
     this.currentStepIndex = 0;
@@ -90,7 +74,6 @@ export class Cat {
   }
 
   _startMovement(direction) {
-    // const blockSize = 100;
     this.moveDirection = direction;
     this.stepTimer = 0;
     this.isMoving = true;
@@ -141,7 +124,6 @@ export class Cat {
 
   _checkPlatform() {
     if (!this.sprite) return false;
-    // if (this.ground && this.sprite.colliding(this.ground)) return true;
 
     if (this.ground && Array.isArray(this.ground)) {
       for (let block of this.ground) {
@@ -156,59 +138,6 @@ export class Cat {
     }
     return false;
   }
-
-  // _continueMovement() {
-  //   this.stepTimer++;
-  
-  //   // let isOnPlatform = false;
-  //   let isOnPlatform = this._checkPlatform(); // Use existing _checkPlatform method instead
-  
-  
-  //   if (this.ground && this.sprite.colliding(this.ground)) {
-  //     isOnPlatform = true;
-  //   }
-  
-  //   if (this.obstacles && Array.isArray(this.obstacles)) {
-  //     for (let block of this.obstacles) {
-  //       if (this.sprite.colliding(block)) {
-  //         isOnPlatform = true;
-  //         break;
-  //       }
-  //     }
-  //   }
-  
-  //   if (this.moveDirection === 'right') {
-  //     this.sprite.vel.x = 3;
-  //     this.lastDirection = 'right';
-  //   }
-  
-  //   if (this.moveDirection === 'left') {
-  //     this.sprite.vel.x = -3;
-  //     this.lastDirection = 'left';
-  //   }
-  
-  //   if (this.moveDirection === 'up' && isOnPlatform && !this.hasJumped) {
-  //     this.sprite.vel.y = -20;
-  
-  //     // use lastDirection to add horizontal push
-  //     if (this.lastDirection === 'right') {
-  //       this.sprite.vel.x = 3;
-  //     } else if (this.lastDirection === 'left') {
-  //       this.sprite.vel.x = -3;
-  //     } else {
-  //       this.sprite.vel.x = 0; // jump straight up
-  //     }
-  //   }
-
-  //   this.hasJumped = true;
-  
-  //   if (this.stepTimer >= this.stepDuration) {
-  //     this.isMoving = false;
-  //     this.currentStepIndex++;
-  //     this.sprite.vel.x = 0;
-  //     this.changeAni('i');
-  //   }
-  // } 
   
   _continueMovement() {
     this.stepTimer++;
@@ -260,15 +189,11 @@ export class Cat {
 
     if (!this.sprite) return null;
 
-    // Reset position to initial coordinates (from constructor)
     this.sprite.x = this.x;
     this.sprite.y = this.y;
-    
-    // Reset velocities
     this.sprite.vel.x = 0;
     this.sprite.vel.y = 0;
     
-    // Reset movement states
     this.steps = [];
     this.currentStepIndex = 0;
     this.isMoving = false;
@@ -277,7 +202,6 @@ export class Cat {
     this.targetX = null;
     this.targetY = null;
     
-    // Reset animation
     this.changeAni('i');
 
     setTimeout(() => {
@@ -299,15 +223,12 @@ export class Cat {
     noFill();
     stroke(255);
     strokeWeight(1);
-    // let w = this.sprite.width * this.sprite.scale;
-    // let h = this.sprite.height * this.sprite.scale;
 
     let w = this.sprite.width;
     let h = this.sprite.height;
 
-    // console.log(`sprite's actual dimension: ${w}x${h}`);
     rectMode(CENTER);
-    // rect(this.sprite.x, this.sprite.y, w, h);
+    rect(this.sprite.x, this.sprite.y, w, h);
   };
 
   changeAni(key) {

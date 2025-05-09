@@ -1,5 +1,5 @@
 export class MyButton {
-    constructor({ x, y, text, mode = "CORNER", style = {}, onPress = null }) {
+    constructor({ x, y, text, mode = "CORNER", style = {}, onPress = null, size = 'small' }) {
       this.button = new Clickable();
   
       // Apply layout
@@ -37,4 +37,3 @@ export class MyButton {
       this.button.locate(x, y);
     }
 };
-  

@@ -7,7 +7,7 @@ import { ControlPanel } from '../components/controlPanel.js';
 import { Flag } from "../Flag.js";
 
 
-export default function GameScene() {
+export default function Level2() {
   let blocksGround = [];
   let blockSprites = [];
 
@@ -152,7 +152,7 @@ export default function GameScene() {
     stroke(colors.secondary);
     strokeWeight(7);
     textAlign(LEFT, TOP);
-    text('lvl.1', width / 32, height /32 - 4);
+    text('lvl.2', width / 32, height /32 - 4);
 
     runButton.draw();
     flag.draw();
@@ -167,7 +167,7 @@ export default function GameScene() {
       };
     };
     
-    if (!levelFinished) {
+    if (levelFinished) {
       // draw the overlay
       push();
       fill(35, 20, 45, 190);
@@ -179,7 +179,7 @@ export default function GameScene() {
       fill(colors.tertiary);
       stroke(colors.secondary);
       strokeWeight(10);
-      text("~lvl 1 DONE!~", width / 2, height / 4);
+      text("~lvl 2 DONE!~", width / 2, height / 4);
       
       // draw button
       nextButton.draw();
@@ -241,7 +241,7 @@ export default function GameScene() {
     if (restart) cat.restart();
     cat.run(steps.contents);
     restart = true;
-  }
+  };
 
   this.exit = function () {
     // Remove cat sprite

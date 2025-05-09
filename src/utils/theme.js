@@ -21,6 +21,13 @@ const buttonL = {
   textSize: 32,
 };
 
+const buttonM = {
+  ...button,
+  width: 200,
+  height: 60,
+  textSize: 26,
+  strokeWeight: 3,
+};
 
 const buttonS = {
   ...button,
@@ -30,4 +37,4 @@ const buttonS = {
   strokeWeight: 3,
 };
 
-export { colors, buttonL, buttonS };
+export { colors, buttonL, buttonM, buttonS };

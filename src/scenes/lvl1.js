@@ -5,9 +5,10 @@ import { MyButton } from '../utils/components.js';
 import { ClickableArrow } from '../components/ClickableArrow.js';
 import { ControlPanel } from '../components/controlPanel.js';
 import { Flag } from "../Flag.js";
+import Level2 from "./lvl2.js";
 
 
-export default function GameScene() {
+export default function Level1() {
   let blocksGround = [];
   let blockSprites = [];
 
@@ -80,7 +81,7 @@ export default function GameScene() {
       text: "next",
       mode: "CENTER",
       style: buttonM,
-      onPress: () => console.log(`redirect to next game`),
+      onPress: () => this.sceneManager.showScene(Level2),
     });
 
     blocks = new ControlPanel({
@@ -167,7 +168,7 @@ export default function GameScene() {
       };
     };
     
-    if (!levelFinished) {
+    if (levelFinished) {
       // draw the overlay
       push();
       fill(35, 20, 45, 190);
@@ -241,7 +242,7 @@ export default function GameScene() {
     if (restart) cat.restart();
     cat.run(steps.contents);
     restart = true;
-  }
+  };
 
   this.exit = function () {
     // Remove cat sprite
