@@ -38,7 +38,7 @@ export default function Level2() {
   
   let blocks;
   let steps;
-  // let loops;
+  let loops;
   // let clickArrow;
 
   // let clicked;
@@ -46,20 +46,22 @@ export default function Level2() {
   let levelFinished = false;
 
   let selectedStepIndex = null;
+  let selectedPanel = null;
   
   const buildingBlocks = [
     new ClickableArrow('up', false),
     new ClickableArrow('right', false),
+    new ClickableArrow('loop', false),
   ];
   
-  // changed on user input
-  let selectedSteps;
-  let selectedBlock;
+  // // changed on user input
+  // let selectedSteps;
+  // let selectedBlock;
 
   const slots = {
-    blocks: 2,
-    steps: 8,
-    loop: 3,
+    blocks: 3,
+    steps: 5,
+    loops: 2,
   }
 
   this.name = "GameScene";
@@ -97,14 +99,13 @@ export default function Level2() {
       y: height / 32,
       numBoxes: slots.steps,
     });
-    
 
-    // loops = new ControlPanel({
-    //   name: 'loop',
-    //   x: width / 32 * 7 + 48 * (slots.blocks + slots.steps + 2.75),
-    //   y: height / 32,
-    //   numBoxes: slots.loops,
-    // });
+    loops = new ControlPanel({
+      name: 'loop',
+      x: width / 32 * 7 + 48 * (slots.blocks + slots.steps + 2.5),
+      y: height / 32,
+      numBoxes: slots.loops,
+    });
 
     flag = new Flag(12 * worldBlockSize, height - worldBlockSize * 4, catSize * 0.75);
 
@@ -158,7 +159,7 @@ export default function Level2() {
     flag.draw();
     blocks.draw();
     steps.draw();
-    // loops.draw();
+    loops.draw();
     cat.draw();
 
     if (cat.sprite && flag.sprite) {
@@ -168,7 +169,6 @@ export default function Level2() {
     };
     
     if (levelFinished) {
-      // draw the overlay
       push();
       fill(35, 20, 45, 190);
       rectMode(CORNER);
@@ -201,45 +201,74 @@ export default function Level2() {
     console.log(`key passed: ${_key}`);
 
     if (keyCode === ESCAPE) {
-        // Deselect the currently selected arrow if any
-        if (selectedStepIndex !== null && steps.contents[selectedStepIndex]) {
-            steps.contents[selectedStepIndex].selected = false;
+      if (selectedPanel && selectedIndex !== null) {
+        const panel = selectedPanel === 'steps' ? steps : loops;
+        if (panel.contents[selectedIndex]) {
+          panel.contents[selectedIndex].selected = false;
         }
-        selectedStepIndex = null;
+      }
+      selectedPanel = null;
+      selectedIndex = null;
     } else {
-        cat.keyPressed(key);
+      cat.keyPressed(key);
     }
   }
 
   this.mousePressed = function() {
-    // console.log(`canvas clicked at ${mouseX}, ${mouseY}`);
-
     steps.contents.forEach((arrow, index) => {
       if (arrow._isMouseOver(mouseX, mouseY)) {
+        steps.contents.forEach(a => a.selected = false);
+        loops.contents.forEach(a => a.selected = false);
+
+        selectedPanel = 'steps';
         selectedStepIndex = index;
         steps.contents.forEach(a => a.selected = false);
         arrow.select();
       }
     });
 
-    blocks.contents.forEach((arrow) => {
+    loops.contents.forEach((arrow, index) => {
       if (arrow._isMouseOver(mouseX, mouseY)) {
-        // console.log("Clicked arrow", arrow.direction);
-        if (selectedStepIndex !== null) {
-          const selectedArrow = steps.contents[selectedStepIndex];
-          selectedArrow.set(arrow.direction);
-          selectedArrow.clickable = true;
-          selectedArrow.selected = false;
-          selectedStepIndex = null;
-        }
+        steps.contents.forEach(a => a.selected = false);
+        loops.contents.forEach(a => a.selected = false);
+
+        selectedPanel = 'loops';
+        selectedStepIndex = index;
+        loops.contents.forEach(a => a.selected = false);
+        arrow.select();
       }
     });
 
+    blocks.contents.forEach((arrow) => {
+      if (arrow._isMouseOver(mouseX, mouseY)) {
+        if (selectedPanel && selectedStepIndex !== null) {
+          let targetPanel = selectedPanel === 'steps' ? steps : loops;
+          const selectedArrow = targetPanel.contents[selectedStepIndex];
+
+          if (selectedPanel === 'loops' && arrow.direction === 'loop') {
+            selectedArrow.selected = false;
+            selectedStepIndex = null;
+            selectedPanel = null;
+            return;
+          }
+
+          selectedArrow.set(arrow.direction);
+          selectedArrow.clickable = true;
+          selectedArrow.selected = false;
+
+          selectedStepIndex = null;
+          selectedPanel = null;
+        }
+      }
+    });
   };  
 
   this.startGame = () => {
     if (restart) cat.restart();
-    cat.run(steps.contents);
+    console.log(steps.contents);
+    console.log(loops.contents);
+    const flattenedSteps = _flattenSteps(steps.contents, loops.contents);
+    cat.run(flattenedSteps);
     restart = true;
   };
 
@@ -267,3 +296,17 @@ export default function Level2() {
     blockSprites = [];
   };
 }
+
+function _flattenSteps(stepList, loopList) {
+  const result = stepList.reduce((acc, curr) => {
+    if (curr.direction == 'loop') acc.push(...loopList);
+    else acc.push(curr);
+    return acc;
+  }, [])
+
+  console.log(`flattened result`)
+  console.log(result);
+
+  return result;
+}
+

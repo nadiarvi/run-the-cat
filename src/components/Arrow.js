@@ -7,6 +7,7 @@ export class Arrow {
       Arrow.images.left = loadImage('/assets/left.png');
       Arrow.images.right = loadImage('/assets/right.png');
       Arrow.images.empty = loadImage('/assets/empty.png');
+      Arrow.images.loop = loadImage('/assets/loop.png');
     }
   
     constructor(direction) {
