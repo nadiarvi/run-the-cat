@@ -4,6 +4,7 @@ import { ClickableArrow } from './components/ClickableArrow.js';
 import StartScene from './scenes/startScene.js';
 import GameScene from './scenes/gameScene.js';
 import Level1 from './scenes/lvl1.js';
+import Level2 from './scenes/lvl2.js';
 
 
 let mgr;
@@ -17,9 +18,11 @@ function setup(){
 
     mgr = new SceneManager();
     mgr.addScene(StartScene);
-    mgr.addScene(GameScene);
+    // mgr.addScene(GameScene);
     mgr.addScene(Level1);
-    mgr.showScene(Level1);
+    mgr.addScene(Level2);
+
+    mgr.showScene(StartScene);
 };
 
 function draw(){

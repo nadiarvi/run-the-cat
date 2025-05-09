@@ -109,6 +109,7 @@ export default function Level1() {
 
     flag = new Flag(12 * worldBlockSize, height - worldBlockSize * 4, catSize * 0.75);
 
+    // Ground (Physical)
     for (let i = 0; i < width; i += worldBlockSize) {
       let b = new Sprite(
           i + worldBlockSize / 2,
@@ -142,7 +143,16 @@ export default function Level1() {
     }
 
     // Sprites
-    cat = new Cat(2.25 * worldBlockSize, height - catSize * 13/12, catSize, blocksGround, blockSprites, worldBlockSize);
+    cat = new Cat(
+      2.25 * worldBlockSize,
+      height - (catSize * 13) / 12,
+      catSize,
+      blocksGround,
+      blockSprites,
+      worldBlockSize
+    );
+
+    // x, y, targetSize, groundRef, obstacleRefs, worldBlockSize
   };
 
   this.draw = () => {

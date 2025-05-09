@@ -2,15 +2,16 @@ import { colors } from '../utils/theme.js';
 import { Cat } from '../_cat.js';
 import { buttonL } from '../utils/theme.js';
 import GameScene from './gameScene.js';
+import { MyButton } from '../utils/components.js';
+import Level1 from './lvl1.js';
 
 export default function StartScene() {
+  const worldBlockSize = 125;
+  const groundHeight = worldBlockSize;
+
   let cat;
-  let button = {
-    x: 0,
-    y: 0,
-    width: 0,
-    height: 0,
-  };
+  let blocksGround = [];
+
   let startButton;
 
   this.name = "StartScene";
@@ -18,31 +19,34 @@ export default function StartScene() {
   this.setup = () => {
     cat = new Cat(width / 2, height - 200, 200);
     
-    startButton = new Clickable();
+    startButton = new MyButton({
+      x: width/2,
+      y: height/2 + 50,
+      text: 'start',
+      mode: 'CENTER',
+      style: buttonL,
+      onPress: () => {
+          console.log("press");
+          this.sceneManager.showScene(Level1);
+      }
+    });
 
-    // Position and mode
-    startButton.mode = "CENTER";
-    startButton.locate(width/2, height/2 + 50);
+    // Ground (physical)
+    for (let i = 0; i < width; i += worldBlockSize) {
+      let b = new Sprite(
+          i + worldBlockSize / 2,
+          height - groundHeight / 2,
+          worldBlockSize,
+          worldBlockSize,
+          'static'
+      );
+      const i_cnt = Math.floor(i / worldBlockSize);
 
-    // Size
-    startButton.width = buttonL.width;
-    startButton.height = buttonL.height;
-
-    // Visual styling
-    startButton.color = buttonL.color;
-    startButton.stroke = buttonL.stroke;
-    startButton.strokeWeight = buttonL.strokeWeight;
-
-    // Text properties
-    startButton.text = 'start';
-    startButton.textFont = buttonL.textFont;
-    startButton.textSize = buttonL.textSize;
-    startButton.textColor = buttonL.textColor;
-
-    startButton.onPress = () => {
-      console.log("press");
-      this.sceneManager.showScene(GameScene);
-    };
+      b.color = (i_cnt % 2) === 0 ? color(colors.secondary) : color(colors.darkRed);
+      b.strokeWeight = 5;
+      b.stroke = (i_cnt % 2) === 0 ? color(colors.darkRed) : color(colors.darkRed);
+      blocksGround.push(b);
+    }
   };
 
   this.draw = () => {
@@ -54,24 +58,6 @@ export default function StartScene() {
     strokeWeight(7);
 
     text("rUn ThE cAT!", width / 2, height / 2 - 100);
-
-    // Button
-    // fill(colors.tertiary);
-    // stroke(colors.secondary);
-    // strokeWeight(3);
-    // rectMode(CENTER);
-    // rect(width / 2, height / 2 + 50, 300, 75, 10);
-    // rectMode(CORNER);
-
-    // button.x = width / 2 - 300 / 2;
-    // button.y = height / 2 + 50 - 75 / 2;
-    // button.width = 300;
-    // button.height = 75;
-
-    // fill(colors.secondary);
-    // noStroke();
-    // textSize(32);
-    // text("Start", width / 2, height / 2 + 60);
 
     // Ground
     fill(colors.secondary);
