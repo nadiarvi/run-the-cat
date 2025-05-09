@@ -15,7 +15,7 @@ export default function GameScene() {
   let restart = false;
 
   const catSize = 150;
-  const worldBlockSize = 100;
+  const worldBlockSize = 125;
   const groundHeight = worldBlockSize;
   // const worldHeight = windowHeight - groundHeight;
   const maxIdx = {
@@ -26,8 +26,8 @@ export default function GameScene() {
   const obstacle = [
     ...Array(maxIdx.y - 3 - 1).fill(...Array(maxIdx.x).fill(0)),
     [...Array(9).fill(0), ...Array(maxIdx.x - 9).fill(1)],
-    [...Array(8).fill(0), ...Array(maxIdx.x - 8).fill(1)],
     [...Array(7).fill(0), ...Array(maxIdx.x - 7).fill(1)],
+    [...Array(5).fill(0), ...Array(maxIdx.x - 5).fill(1)],
   ];
 
   let cat;
@@ -55,7 +55,7 @@ export default function GameScene() {
 
   const slots = {
     blocks: 2,
-    steps: 6,
+    steps: 8,
     loop: 3,
   }
 
@@ -75,7 +75,7 @@ export default function GameScene() {
       name: 'blocks',
       x: width / 32 * 7,
       y: height / 32,
-      numBoxes: 2
+      numBoxes: slots.blocks,
     });
     blocks.setContents(buildingBlocks);
 
@@ -83,7 +83,7 @@ export default function GameScene() {
       name: 'steps',
       x: width / 32 * 7 + 48 * (slots.blocks + 1),
       y: height / 32,
-      numBoxes: 6
+      numBoxes: slots.steps,
     });
     
 
@@ -91,7 +91,7 @@ export default function GameScene() {
     //   name: 'loop',
     //   x: width / 32 * 7 + 48 * (slots.blocks + slots.steps + 2.75),
     //   y: height / 32,
-    //   numBoxes: 4
+    //   numBoxes: slots.loops,
     // });
 
     for (let i = 0; i < width; i += worldBlockSize) {
@@ -128,7 +128,7 @@ export default function GameScene() {
 
     // Cat sprite
     // cat = new Cat(width / 4, height - catSize * 13/12, catSize, blocksGround, blockSprites);
-    cat = new Cat(3.5 * worldBlockSize, height - catSize * 13/12, catSize, blocksGround, blockSprites);
+    cat = new Cat(2.25 * worldBlockSize, height - catSize * 13/12, catSize, blocksGround, blockSprites, worldBlockSize);
   };
 
   this.draw = () => {
@@ -173,7 +173,7 @@ export default function GameScene() {
   }
 
   this.mousePressed = function() {
-    console.log(`canvas clicked at ${mouseX}, ${mouseY}`);
+    // console.log(`canvas clicked at ${mouseX}, ${mouseY}`);
 
     steps.contents.forEach((arrow, index) => {
       if (arrow._isMouseOver(mouseX, mouseY)) {
@@ -201,6 +201,6 @@ export default function GameScene() {
   this.startGame = () => {
     if (restart) cat.restart();
     cat.run(steps.contents);
-    this.restart = true;
+    restart = true;
   }
 }

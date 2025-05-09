@@ -1,14 +1,18 @@
 export class Cat {
-  constructor(x, y, targetSize, groundRef, obstacleRefs) {
+  constructor(x, y, targetSize, groundRef, obstacleRefs, worldBlockSize) {
     this.x = x;
     this.y = y;
-    this.size = 171;
+    // this.size = 171;
+    this.size = 0;
     this.targetSize = targetSize;
     this.sprite = null;
     this.loaded = false;
-    this.velocity = 24;
+    this.velocity = 3.5;
     this.ground = groundRef;
     this.obstacles = obstacleRefs;
+    this.blockSize = worldBlockSize;
+
+    this.shiftOffset = 0;
 
     this.steps = [];
 
@@ -22,9 +26,14 @@ export class Cat {
     this.hasJumped = false;
 
     loadImage('assets/cat.webp', (img) => {
+      // debugging
+      // console.log(`loaded image size: ${img.width} x ${img.height}`);
+      // console.log(`one sprite size: ${img.height / 5}`);
+      this.size = img.height / 5;
+
       this.sprite = new Sprite(this.x, this.y, this.size, this.size, 'dynamic');
       this.sprite.rotationLock = true;
-      this.sprite.bounciness = 0.1;
+      this.sprite.bounciness = 0;
       this.sprite.spriteSheet = img;
       this.sprite.anis.offset.y = 3;
       this.sprite.anis.frameDelay = 8;
@@ -38,21 +47,27 @@ export class Cat {
       });
       this.sprite.changeAni('idle');
 
-      const scaleFactor = this.targetSize / 171;
+      const scaleFactor = this.targetSize / this.size;
       this.sprite.scale = scaleFactor;
+      
+      this.shiftOffset = this.targetSize - this.sprite.width * this.sprite.scale;
+      this.sprite.anis.offset.x = this.shiftOffset;
+      // this.sprite.anis.offset.x = 100;
+
+
       this.loaded = true;
     });
   }
   
   update() {
     if (!this.sprite || this.steps.length === 0) return;
-    console.log(`updating sprite...`);
+    // console.log(`updating sprite...`);
 
     if (this.isMoving) {
       this._continueMovement();
     } else if (this.currentStepIndex < this.steps.length) {
       this._startMovement(this.steps[this.currentStepIndex]);
-    }
+    };
 
     this._handleInput();
   };
@@ -75,32 +90,50 @@ export class Cat {
   }
 
   _startMovement(direction) {
-    const blockSize = 100;
+    // const blockSize = 100;
     this.moveDirection = direction;
     this.stepTimer = 0;
     this.isMoving = true;
 
     if (direction === 'right') {
-      this.targetX = this.sprite.x + blockSize;
+      this.targetX = this.sprite.x + this.blockSize;
+      console.log(`dir: ${this.direction}, start: ${this.sprite.x}, end: ${this.targetX}`);
+      this.targetY = this.sprite.y;
+
       this.sprite.vel.x = this.velocity;
+      this.sprite.vel.y = 0;
+
       this.lastDirection = 'right';
       this.changeAni('w');
     } else if (direction === 'left') {
-      this.targetX = this.sprite.x - blockSize;
+      this.targetX = this.sprite.x - this.blockSize;
+      console.log(`dir: ${this.direction}, start: ${this.sprite.x}, end: ${this.targetX}`);
+      this.targetY = this.sprite.y;
+
       this.sprite.vel.x = -this.velocity;
+      this.sprite.vel.y = 0;
+      
       this.lastDirection = 'left';
       this.changeAni('w');
+      
     } else if (direction === 'up') {
-      this.targetY = this.sprite.y - blockSize;
+      this.targetX = this.sprite.x + (this.lastDirection === 'right' ? this.blockSize : -this.blockSize);
+      console.log(`dir: ${this.direction}, start: ${this.sprite.x}, end: ${this.targetX}`);
+      this.targetY = this.sprite.y - this.blockSize;
+
       this.hasJumped = false;
 
-      // Check platform
-      let isOnPlatform = this._checkPlatform();
-      if (isOnPlatform) {
-        this.sprite.vel.y = -10;
-        if (this.lastDirection === 'right') this.sprite.vel.x = this.velocity;
-        else if (this.lastDirection === 'left') this.sprite.vel.x = -this.velocity;
-        else this.sprite.vel.x = 0;
+      if (this._checkPlatform()) {
+        this.sprite.vel.y = -this.velocity;
+
+        if (this.lastDirection === "right") {
+          this.sprite.vel.x = this.velocity;
+        } else if (this.lastDirection === "left") {
+          this.sprite.vel.x = -this.velocity;
+        } else {
+          this.sprite.vel.x = 0;
+        }
+
         this.changeAni('j');
       }
     }
@@ -180,25 +213,28 @@ export class Cat {
   _continueMovement() {
     this.stepTimer++;
   
-    let isOnPlatform = this._checkPlatform(); // ✅ use this only
+    let isOnPlatform = this._checkPlatform();
   
     if (this.moveDirection === 'right') {
-      this.sprite.vel.x = 3;
+      this.changeAni('w');
+      this.sprite.vel.x = this.velocity;
       this.lastDirection = 'right';
     }
   
     if (this.moveDirection === 'left') {
-      this.sprite.vel.x = -3;
+      this.changeAni('w');
+      this.sprite.vel.x = -this.velocity;
       this.lastDirection = 'left';
     }
   
     if (this.moveDirection === 'up' && isOnPlatform && !this.hasJumped) {
+      this.changeAni('j');
       this.sprite.vel.y = -20;
   
       if (this.lastDirection === 'right') {
-        this.sprite.vel.x = 3;
+        this.sprite.vel.x = this.velocity;
       } else if (this.lastDirection === 'left') {
-        this.sprite.vel.x = -3;
+        this.sprite.vel.x = -this.velocity;
       } else {
         this.sprite.vel.x = 0;
       }
@@ -210,6 +246,9 @@ export class Cat {
       this.isMoving = false;
       this.currentStepIndex++;
       this.sprite.vel.x = 0;
+      // force snap
+      // this.sprite.x = this.targetX;
+      // this.sprite.y = this.targetY;
       this.changeAni('i');
     }
   }
@@ -255,6 +294,20 @@ export class Cat {
     if (!this.sprite) return;
     this.update();
     this.sprite.update();
+
+    // debugging purposes
+    noFill();
+    stroke(255);
+    strokeWeight(1);
+    // let w = this.sprite.width * this.sprite.scale;
+    // let h = this.sprite.height * this.sprite.scale;
+
+    let w = this.sprite.width;
+    let h = this.sprite.height;
+
+    // console.log(`sprite's actual dimension: ${w}x${h}`);
+    rectMode(CENTER);
+    // rect(this.sprite.x, this.sprite.y, w, h);
   };
 
   changeAni(key) {
@@ -320,7 +373,7 @@ export class Cat {
   }
 
   _handleInput(){
-    console.log('assume i have something....');
+    // console.log('assume i have something....');
   }
 }
   
