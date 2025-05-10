@@ -19,15 +19,15 @@ export default function Level3() {
   const worldBlockSize = 125;
   const groundHeight = worldBlockSize;
   const maxIdx = {
-    x: Math.ceil(windowWidth / worldBlockSize),
+    x: Math.ceil(windowWidth / worldBlockSize) + 1,
     y: Math.floor(windowHeight / worldBlockSize)
   }
 
   const obstacle = [
     ...Array(maxIdx.y - 3 - 1).fill(...Array(maxIdx.x).fill(0)),
-    [...Array(9).fill(0), ...Array(maxIdx.x - 9).fill(1)],
-    [...Array(7).fill(0), ...Array(maxIdx.x - 7).fill(1)],
-    [...Array(5).fill(0), ...Array(maxIdx.x - 5).fill(1)],
+    [...Array(8).fill(0), ...Array(maxIdx.x - 9).fill(1)],
+    [...Array(6).fill(0), ...Array(maxIdx.x - 7).fill(1)],
+    [...Array(4).fill(0), ...Array(maxIdx.x - 5).fill(1)],
   ];
 
   let cat;
@@ -114,8 +114,8 @@ export default function Level3() {
       numBoxes: slots.keys,
     });
 
-    flag = new Flag(11 * worldBlockSize, height - worldBlockSize * 4, catSize * 0.75, true);
-    key = new Key(13 * worldBlockSize, height - worldBlockSize * 4.3, catSize * 0.35);
+    flag = new Flag(10 * worldBlockSize, height - worldBlockSize * 4, catSize * 0.75, true);
+    key = new Key(12 * worldBlockSize, height - worldBlockSize * 4.3, catSize * 0.35);
 
     for (let i = 0; i < width; i += worldBlockSize) {
       let b = new Sprite(
@@ -150,7 +150,7 @@ export default function Level3() {
     }
 
     // Sprites
-    cat = new Cat(2.25 * worldBlockSize, height - catSize * 13/12, catSize, blocksGround, blockSprites, worldBlockSize);
+    cat = new Cat(1.25 * worldBlockSize, height - catSize * 13/12, catSize, blocksGround, blockSprites, worldBlockSize);
   };
 
   this.draw = () => {
