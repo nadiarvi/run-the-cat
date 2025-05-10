@@ -28,7 +28,7 @@ export class Cat {
       this.size = img.height / 5;
 
       this.sprite = new Sprite(this.x, this.y, this.size, this.size, 'dynamic');
-      console.log(`sprite made at ${this.x}, ${this.y}`);
+      //console.log(`sprite made at ${this.x}, ${this.y}`);
       this.sprite.rotationLock = true;
       this.sprite.bounciness = 0.1;
       this.sprite.spriteSheet = img;
@@ -52,12 +52,14 @@ export class Cat {
       // this.sprite.anis.offset.x = this.targetSize / 4;
 
       this.loaded = true;
+
+      this._debug();
     });
   }
   
   update() {
     if (!this.sprite || this.steps.length === 0) return;
-    // console.log(`updating sprite...`);
+    // //console.log(`updating sprite...`);
 
     if (this.isMoving) {
       this._continueMovement();
@@ -75,6 +77,8 @@ export class Cat {
   }
 
   _startMovement(direction) {
+    //console.log('start');
+    //console.log(`[startMovement] called with direction: ${direction}`);
     this.moveDirection = direction;
     this.stepTimer = 0;
     this.isMoving = true;
@@ -123,6 +127,8 @@ export class Cat {
   }
   
   _continueMovement() {
+    //console.log('continue');
+    //console.log(`[startMovement] called with direction: ${this.moveDirection}`);
     this.stepTimer++;
   
     let isOnPlatform = this._checkPlatform();
@@ -142,6 +148,7 @@ export class Cat {
     }
   
     if (this.moveDirection === 'up' && isOnPlatform && !this.hasJumped) {
+      //console.log(`up called with direction: ${this.moveDirection}. inside the handler`);
       this.changeAni('j');
       this.sprite.vel.y = -20;
   
@@ -152,9 +159,11 @@ export class Cat {
       } else {
         this.sprite.vel.x = 0;
       }
+
+      this.hasJumped = true;
     }
   
-    this.hasJumped = true;
+    
   
     if (this.stepTimer >= this.stepDuration) {
       this.isMoving = false;
@@ -182,22 +191,15 @@ export class Cat {
   }
   
   restart() {
-    console.log('resetting initial position.....');
+    //console.log('resetting initial position.....');
 
     if (!this.sprite) return null;
 
     this.sprite.x = this.x;
     this.sprite.y = this.y;
-    console.log(`sprite re-made at ${this.x}, ${this.y}`);
+    //console.log(`sprite re-made at ${this.x}, ${this.y}`);
     this.sprite.vel.x = 0;
     this.sprite.vel.y = 0;
-
-    // this.sprite.scale = this.targetSize / this.size;
-    // this.sprite.mirror.x = false;
-    // this.sprite.rotation = 0;
-    // this.sprite.rotationSpeed = 0;
-
-    // this.sprite.anis.offset.x = this.shiftOffset + this.targetSize / 4;
     
     this.steps = [];
     this.currentStepIndex = 0;
@@ -206,13 +208,19 @@ export class Cat {
     this.moveDirection = null;
     // this.targetX = null;
     // this.targetY = null;
+
+    // TRIAL PLS WORK
+    this.lastDirection = null;
+    this.hasJumped = false;
     
     this.changeAni('i');
+
+    this._debug();
   }
   
 
   keyPressed(key) {
-    console.log(`receiving keyboard input: ${key}`);
+    //console.log(`receiving keyboard input: ${key}`);
   }
 
   draw() {
@@ -271,22 +279,22 @@ export class Cat {
 
   // helper
   _getSpritePosition(){
-    console.log(`sprite's actual position: ${this.sprite.x}, ${this.sprite.y}`);
+    //console.log(`sprite's actual position: ${this.sprite.x}, ${this.sprite.y}`);
     return (this.sprite.x, this.sprite.y);
   }
 
   _translate(step){
     switch (step) {
       case 'up':
-        console.log('move: up');
+        //console.log('move: up');
         return 'jump'
         break;
       case 'right':
-        console.log('move: down');
+        //console.log('move: down');
         return 'walk'
         break;
       case 'down':
-        console.log('move: up');
+        //console.log('move: up');
         return 'jump'
         break;
       default:
@@ -295,7 +303,41 @@ export class Cat {
   }
 
   _handleInput(){
-    // console.log('assume i have something....');
+    // //console.log('assume i have something....');
   }
+
+  _debug() {
+    //console.log("===== CAT DEBUG INFO =====");
+    //console.log(`Position: (${this.x}, ${this.y})`);
+    //console.log(`Target Size: ${this.targetSize}`);
+    //console.log(`Current Size: ${this.size}`);
+    //console.log(`Velocity: ${this.velocity}`);
+    //console.log(`Block Size: ${this.blockSize}`);
+    //console.log(`Step Duration: ${this.stepDuration}`);
+    //console.log(`Current Step Index: ${this.currentStepIndex}`);
+    //console.log(`Is Moving: ${this.isMoving}`);
+    //console.log(`Move Direction: ${this.moveDirection}`);
+    //console.log(`Last Direction: ${this.lastDirection}`);
+    //console.log(`Has Jumped: ${this.hasJumped}`);
+    //console.log(`Loaded: ${this.loaded}`);
+    //console.log(`Shift Offset: ${this.shiftOffset}`);
+    //console.log(`Ground Ref:`, this.ground);
+    //console.log(`Obstacles Ref:`, this.obstacles);
+
+    if (this.sprite) {
+      //console.log("Sprite Info:");
+      //console.log(`  Sprite Position: (${this.sprite.x}, ${this.sprite.y})`);
+      //console.log(`  Sprite Size: ${this.sprite.width} x ${this.sprite.height}`);
+      //console.log(`  Sprite Scale: ${this.sprite.scale}`);
+      //console.log(`  Sprite Rotation Locked: ${this.sprite.rotationLock}`);
+      //console.log(`  Sprite Bounciness: ${this.sprite.bounciness}`);
+      //console.log(`  Sprite Friction: ${this.sprite.friction}`);
+      //console.log(`  Sprite Ani Offset: x=${this.sprite.anis.offset.x}, y=${this.sprite.anis.offset.y}`);
+      //console.log(`  Current Animation: ${this.sprite.animation.name}`);
+    } else {
+      //console.log("Sprite not yet loaded.");
+    }
+    //console.log("===========================");
+  };
 }
   
