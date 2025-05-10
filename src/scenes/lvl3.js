@@ -5,10 +5,10 @@ import { MyButton } from '../utils/components.js';
 import { ClickableArrow } from '../components/ClickableArrow.js';
 import { ControlPanel } from '../components/controlPanel.js';
 import { Flag } from "../components/Flag.js";
-import Level2 from "./lvl2.js";
+import { Key } from '../components/Key.js';
 
 
-export default function Level1() {
+export default function Level3() {
   let blocksGround = [];
   let blockSprites = [];
 
@@ -32,6 +32,7 @@ export default function Level1() {
 
   let cat;
   let flag;
+  let key;
   
   let runButton;
   let nextButton;
@@ -39,7 +40,8 @@ export default function Level1() {
   
   let blocks;
   let steps;
-  // let loops;
+  let loops;
+  let keys;
   // let clickArrow;
 
   // let clicked;
@@ -47,25 +49,30 @@ export default function Level1() {
   let levelFinished = false;
 
   let selectedStepIndex = null;
+  let selectedPanel = null;
   
   const buildingBlocks = [
     new ClickableArrow('up', false),
     new ClickableArrow('right', false),
+    new ClickableArrow('loop', false),
   ];
   
-  // changed on user input
-  let selectedSteps;
-  let selectedBlock;
+  // // changed on user input
+  // let selectedSteps;
+  // let selectedBlock;
 
   const slots = {
-    blocks: 2,
-    steps: 8,
-    loop: 3,
+    blocks: 3,
+    steps: 5,
+    loops: 2,
+    keys: 1,
   }
 
-  this.name = "GameScene";
+  this.name = "Level 3";
 
   this.setup = () => {
+    console.log(this.name);
+    
     runButton = new MyButton({
       x: (width / 32) * 28.5,
       y: height / 32,
@@ -81,7 +88,7 @@ export default function Level1() {
       text: "next",
       mode: "CENTER",
       style: buttonM,
-      onPress: () => this.sceneManager.showScene(Level2),
+      onPress: () => console.log(`redirect to next game`),
     });
 
     blocks = new ControlPanel({
@@ -98,18 +105,24 @@ export default function Level1() {
       y: height / 32,
       numBoxes: slots.steps,
     });
-    
 
-    // loops = new ControlPanel({
-    //   name: 'loop',
-    //   x: width / 32 * 7 + 48 * (slots.blocks + slots.steps + 2.75),
-    //   y: height / 32,
-    //   numBoxes: slots.loops,
-    // });
+    loops = new ControlPanel({
+      name: 'loop',
+      x: width / 32 * 7 + 48 * (slots.blocks + slots.steps + 2.5),
+      y: height / 32,
+      numBoxes: slots.loops,
+    });
 
-    flag = new Flag(12 * worldBlockSize, height - worldBlockSize * 4, catSize * 0.75);
+    keys = new ControlPanel({
+      name: 'key',
+      x: width / 32 * 7 + 48 * (slots.blocks + slots.steps + slots.loops + 3.5),
+      y: height / 32,
+      numBoxes: slots.keys,
+    });
 
-    // Ground (Physical)
+    flag = new Flag(12 * worldBlockSize, height - worldBlockSize * 4, catSize * 0.75, true);
+    key = new Key(10 * worldBlockSize, height - worldBlockSize * 4.3, catSize * 0.35);
+
     for (let i = 0; i < width; i += worldBlockSize) {
       let b = new Sprite(
           i + worldBlockSize / 2,
@@ -143,59 +156,38 @@ export default function Level1() {
     }
 
     // Sprites
-    cat = new Cat(
-      2.25 * worldBlockSize,
-      height - (catSize * 13) / 12,
-      catSize,
-      blocksGround,
-      blockSprites,
-      worldBlockSize
-    );
-
-    // x, y, targetSize, groundRef, obstacleRefs, worldBlockSize
+    cat = new Cat(2.25 * worldBlockSize, height - catSize * 13/12, catSize, blocksGround, blockSprites, worldBlockSize);
   };
 
   this.draw = () => {
     background(colors.primary);
-
-    fill(colors.tertiary);
-    textSize(128);
-    stroke(colors.secondary);
-    strokeWeight(7);
-    textAlign(LEFT, TOP);
-    text('lvl.1', width / 32, height /32 - 4);
+    _drawLevelTitle('lvl.3');
 
     runButton.draw();
-    flag.draw();
+    
     blocks.draw();
     steps.draw();
-    // loops.draw();
+    loops.draw();
+    keys.draw();
     cat.draw();
+    flag.draw();
+
+    _checkKeyObtained(cat, key, keys, flag);
+    if (key && !key.obtained) key.draw();
 
     if (cat.sprite && flag.sprite) {
-      if (cat.sprite.overlaps(flag.sprite)) {
+      if (key && key.getObtain()) {
+        flag.setColliderMode('none');
+
+        if (cat.sprite.overlaps(flag.sprite)) {
         levelFinished = true;
       };
+      } else {
+        flag.setColliderMode('static');
+      }
     };
     
-    if (levelFinished) {
-      // draw the overlay
-      push();
-      fill(35, 20, 45, 190);
-      rectMode(CORNER);
-      rect(0, 0, width, height);
-
-      textAlign(CENTER, CENTER);
-      textSize(128)
-      fill(colors.tertiary);
-      stroke(colors.secondary);
-      strokeWeight(10);
-      text("~lvl 1 DONE!~", width / 2, height / 4);
-      
-      // draw button
-      nextButton.draw();
-      pop();
-    }
+    if (levelFinished) _finishGame(nextButton);
   };
 
   this.onResize = () => {
@@ -212,45 +204,74 @@ export default function Level1() {
     console.log(`key passed: ${_key}`);
 
     if (keyCode === ESCAPE) {
-        // Deselect the currently selected arrow if any
-        if (selectedStepIndex !== null && steps.contents[selectedStepIndex]) {
-            steps.contents[selectedStepIndex].selected = false;
+      if (selectedPanel && selectedIndex !== null) {
+        const panel = selectedPanel === 'steps' ? steps : loops;
+        if (panel.contents[selectedIndex]) {
+          panel.contents[selectedIndex].selected = false;
         }
-        selectedStepIndex = null;
+      }
+      selectedPanel = null;
+      selectedIndex = null;
     } else {
-        cat.keyPressed(key);
+      cat.keyPressed(key);
     }
   }
 
   this.mousePressed = function() {
-    // console.log(`canvas clicked at ${mouseX}, ${mouseY}`);
-
     steps.contents.forEach((arrow, index) => {
       if (arrow._isMouseOver(mouseX, mouseY)) {
+        steps.contents.forEach(a => a.selected = false);
+        loops.contents.forEach(a => a.selected = false);
+
+        selectedPanel = 'steps';
         selectedStepIndex = index;
         steps.contents.forEach(a => a.selected = false);
         arrow.select();
       }
     });
 
-    blocks.contents.forEach((arrow) => {
+    loops.contents.forEach((arrow, index) => {
       if (arrow._isMouseOver(mouseX, mouseY)) {
-        // console.log("Clicked arrow", arrow.direction);
-        if (selectedStepIndex !== null) {
-          const selectedArrow = steps.contents[selectedStepIndex];
-          selectedArrow.set(arrow.direction);
-          selectedArrow.clickable = true;
-          selectedArrow.selected = false;
-          selectedStepIndex = null;
-        }
+        steps.contents.forEach(a => a.selected = false);
+        loops.contents.forEach(a => a.selected = false);
+
+        selectedPanel = 'loops';
+        selectedStepIndex = index;
+        loops.contents.forEach(a => a.selected = false);
+        arrow.select();
       }
     });
 
+    blocks.contents.forEach((arrow) => {
+      if (arrow._isMouseOver(mouseX, mouseY)) {
+        if (selectedPanel && selectedStepIndex !== null) {
+          let targetPanel = selectedPanel === 'steps' ? steps : loops;
+          const selectedArrow = targetPanel.contents[selectedStepIndex];
+
+          if (selectedPanel === 'loops' && arrow.direction === 'loop') {
+            selectedArrow.selected = false;
+            selectedStepIndex = null;
+            selectedPanel = null;
+            return;
+          }
+
+          selectedArrow.set(arrow.direction);
+          selectedArrow.clickable = true;
+          selectedArrow.selected = false;
+
+          selectedStepIndex = null;
+          selectedPanel = null;
+        }
+      }
+    });
   };  
 
   this.startGame = () => {
     if (restart) cat.restart();
-    cat.run(steps.contents);
+    console.log(steps.contents);
+    console.log(loops.contents);
+    const flattenedSteps = _flattenSteps(steps.contents, loops.contents);
+    cat.run(flattenedSteps);
     restart = true;
   };
 
@@ -278,3 +299,56 @@ export default function Level1() {
     blockSprites = [];
   };
 }
+
+function _flattenSteps(stepList, loopList) {
+  const result = stepList.reduce((acc, curr) => {
+    if (curr.direction == 'loop') acc.push(...loopList);
+    else acc.push(curr);
+    return acc;
+  }, [])
+
+  console.log(`flattened result`)
+  console.log(result);
+
+  return result;
+}
+
+function _checkKeyObtained(cat, key, keys, flag) {
+  if (!key || !cat || !keys || !flag) return;
+  if (!key.getObtain() && cat.sprite && key.sprite && cat.sprite.overlaps(key.sprite)) {
+    key.obtain();
+    keys.contents.forEach((arrow) => {
+      arrow.set('key');
+    })
+    flag.setLocked(false);
+    if (flag) flag.debug();
+  }
+}
+
+function _finishGame(nextButton){
+  push();
+  fill(35, 20, 45, 190);
+  rectMode(CORNER);
+  rect(0, 0, width, height);
+
+  textAlign(CENTER, CENTER);
+  textSize(128)
+  fill(colors.tertiary);
+  stroke(colors.secondary);
+  strokeWeight(10);
+  text("~lvl 3 DONE!~", width / 2, height / 4);
+  
+  // draw button
+  nextButton.draw();
+  pop();
+}
+
+function _drawLevelTitle(title){
+  fill(colors.tertiary);
+  textSize(128);
+  stroke(colors.secondary);
+  strokeWeight(7);
+  textAlign(LEFT, TOP);
+  text(title, width / 32, height /32 - 4);
+}
+

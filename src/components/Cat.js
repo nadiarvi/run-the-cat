@@ -175,9 +175,6 @@ export class Cat {
       this.isMoving = false;
       this.currentStepIndex++;
       this.sprite.vel.x = 0;
-      // force snap
-      // this.sprite.x = this.targetX;
-      // this.sprite.y = this.targetY;
       this.changeAni('i');
     }
   }

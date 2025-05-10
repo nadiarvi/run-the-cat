@@ -1,10 +1,11 @@
 import { colors } from '../utils/theme.js';
-import { Cat } from '../cat.js';
+import { Cat } from '../components/Cat.js';
 import { buttonS, buttonM, buttonL } from '../utils/theme.js';
 import { MyButton } from '../utils/components.js';
 import { ClickableArrow } from '../components/ClickableArrow.js';
 import { ControlPanel } from '../components/controlPanel.js';
-import { Flag } from "../Flag.js";
+import { Flag } from "../components/Flag.js";
+import Level3 from './lvl3.js';
 
 
 export default function Level2() {
@@ -64,9 +65,10 @@ export default function Level2() {
     loops: 2,
   }
 
-  this.name = "GameScene";
+  this.name = "Level 2";
 
   this.setup = () => {
+    console.log(this.name);
     runButton = new MyButton({
       x: (width / 32) * 28.5,
       y: height / 32,
@@ -82,7 +84,7 @@ export default function Level2() {
       text: "next",
       mode: "CENTER",
       style: buttonM,
-      onPress: () => console.log(`redirect to next game`),
+      onPress: () => this.sceneManager.showScene(Level3),
     });
 
     blocks = new ControlPanel({

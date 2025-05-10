@@ -1,7 +1,6 @@
 import { colors } from '../utils/theme.js';
-import { Cat } from '../_cat.js';
+import { Cat } from '../components/Cat.js';
 import { buttonL } from '../utils/theme.js';
-import GameScene from './gameScene.js';
 import { MyButton } from '../utils/components.js';
 import Level1 from './lvl1.js';
 

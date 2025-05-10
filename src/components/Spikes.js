@@ -1,6 +1,5 @@
-export class Flag {
+export class Spikes {
     constructor(x, y, targetSize) {
-        // props
         this.x = x;
         this.y = y;
         this.targetSize = targetSize;

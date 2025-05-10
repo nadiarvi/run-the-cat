@@ -1,10 +1,10 @@
 import { colors } from '../utils/theme.js';
-import { Cat } from '../cat.js';
+import { Cat } from '../components/Cat.js';
 import { buttonS, buttonM, buttonL } from '../utils/theme.js';
 import { MyButton } from '../utils/components.js';
 import { ClickableArrow } from '../components/ClickableArrow.js';
 import { ControlPanel } from '../components/controlPanel.js';
-import { Flag } from "../Flag.js";
+import { Flag } from "../components/Flag.js";
 
 
 export default function GameScene() {

@@ -10,6 +10,7 @@ export class ClickableArrow {
     ClickableArrow.images.right = loadImage('/assets/right.png');
     ClickableArrow.images.empty = loadImage('/assets/empty.png');
     ClickableArrow.images.loop = loadImage('/assets/loop.png');
+    ClickableArrow.images.key = loadImage('/assets/key.png');
   }
 
   constructor(direction, clickable = false) {
