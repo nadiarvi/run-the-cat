@@ -7,7 +7,6 @@ import Level1 from './scenes/lvl1.js';
 import Level2 from './scenes/lvl2.js';
 import Level3 from './scenes/lvl3.js';
 
-
 let mgr;
 
 function setup(){
@@ -19,12 +18,11 @@ function setup(){
 
     mgr = new SceneManager();
     mgr.addScene(StartScene);
-    // mgr.addScene(GameScene);
     mgr.addScene(Level1);
     mgr.addScene(Level2);
     mgr.addScene(Level3);
 
-    mgr.showScene(StartScene);
+    mgr.showScene(Level3);
 };
 
 function draw(){
