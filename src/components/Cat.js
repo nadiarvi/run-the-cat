@@ -229,7 +229,7 @@ export class Cat {
     let h = this.sprite.height;
 
     rectMode(CENTER);
-    rect(this.sprite.x, this.sprite.y, w, h);
+    // rect(this.sprite.x, this.sprite.y, w, h);
   };
 
   changeAni(key) {

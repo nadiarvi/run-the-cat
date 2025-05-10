@@ -13,9 +13,6 @@ export class Flag {
         this.size = 0;
         this.locked = guarded ? true : false;
 
-        this.unlockAni = false;
-        this.unlockProg = 1; // 1: locked, 0: unlocked
-
         // Load the flag image
         loadImage('assets/flag.png', (img) => {
             this.size = img.height;
@@ -66,6 +63,11 @@ export class Flag {
 
     setLocked(mode) {
         this.locked = mode;
+    }
+
+    restart() {
+        this.sprite.collider = 'none';
+        this.locked = true;
     }
 
     debug() {

@@ -3,10 +3,11 @@ import { ClickableArrow } from "./ClickableArrow";
 import { colors } from "../utils/theme";
 
 export class ControlPanel {
-    constructor({ name, x, y, numBoxes }) {
+    constructor({ name, x, y, numBoxes, blockColor = null }) {
         this.name = name;
         this.x = x;
         this.y = y;
+        this.blockColor = blockColor;
         this.numBoxes = numBoxes;
         this.boxWidth = 48;
         this.boxHeight = 48;

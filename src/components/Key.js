@@ -64,6 +64,10 @@ export class Key {
         return this.obtained;
     }
 
+    restart() {
+        this.obtained = false;
+    }
+
     debug() {
         console.log(`Flag position: x=${this.x}, y=${this.y}`);
         console.log(`Flag loaded: ${this.isLoaded}`);

@@ -17,7 +17,6 @@ export default function Level3() {
   const catSize = 155;
   const worldBlockSize = 125;
   const groundHeight = worldBlockSize;
-  // const worldHeight = windowHeight - groundHeight;
   const maxIdx = {
     x: Math.ceil(windowWidth / worldBlockSize),
     y: Math.floor(windowHeight / worldBlockSize)
@@ -42,9 +41,6 @@ export default function Level3() {
   let steps;
   let loops;
   let keys;
-  // let clickArrow;
-
-  // let clicked;
 
   let levelFinished = false;
 
@@ -54,16 +50,13 @@ export default function Level3() {
   const buildingBlocks = [
     new ClickableArrow('up', false),
     new ClickableArrow('right', false),
+    new ClickableArrow('left', false),
     new ClickableArrow('loop', false),
   ];
-  
-  // // changed on user input
-  // let selectedSteps;
-  // let selectedBlock;
 
   const slots = {
-    blocks: 3,
-    steps: 5,
+    blocks: 4,
+    steps: 6,
     loops: 2,
     keys: 1,
   }
@@ -101,27 +94,27 @@ export default function Level3() {
 
     steps = new ControlPanel({
       name: 'steps',
-      x: width / 32 * 7 + 48 * (slots.blocks + 1),
+      x: width / 32 * 7 + 48 * (slots.blocks + 1.5),
       y: height / 32,
       numBoxes: slots.steps,
     });
 
     loops = new ControlPanel({
       name: 'loop',
-      x: width / 32 * 7 + 48 * (slots.blocks + slots.steps + 2.5),
+      x: width / 32 * 7 + 48 * (slots.blocks + slots.steps + 3.25),
       y: height / 32,
       numBoxes: slots.loops,
     });
 
     keys = new ControlPanel({
       name: 'key',
-      x: width / 32 * 7 + 48 * (slots.blocks + slots.steps + slots.loops + 3.5),
+      x: width / 32 * 7 + 48 * (slots.blocks + slots.steps + slots.loops + 4.25),
       y: height / 32,
       numBoxes: slots.keys,
     });
 
-    flag = new Flag(12 * worldBlockSize, height - worldBlockSize * 4, catSize * 0.75, true);
-    key = new Key(10 * worldBlockSize, height - worldBlockSize * 4.3, catSize * 0.35);
+    flag = new Flag(11 * worldBlockSize, height - worldBlockSize * 4, catSize * 0.75, true);
+    key = new Key(13 * worldBlockSize, height - worldBlockSize * 4.3, catSize * 0.35);
 
     for (let i = 0; i < width; i += worldBlockSize) {
       let b = new Sprite(
@@ -175,20 +168,7 @@ export default function Level3() {
     _checkKeyObtained(cat, key, keys, flag);
     if (key && !key.obtained) key.draw();
 
-    // if (cat.sprite && flag.sprite) {
-    //   if (key && key.getObtain()) {
-    //     flag.setColliderMode('none');
-
-    //     if (cat.sprite.overlaps(flag.sprite)) {
-    //     levelFinished = true;
-    //   };
-    //   } else {
-    //     flag.setColliderMode('static');
-    //   }
-    // };
-
     if (cat.sprite && flag.sprite) {
-      // Only finish if key is obtained
       if (cat.sprite.overlaps(flag.sprite) && key && key.obtained) {
         levelFinished = true;
       }
@@ -274,7 +254,11 @@ export default function Level3() {
   };  
 
   this.startGame = () => {
-    if (restart) cat.restart();
+    if (restart){
+      cat.restart();
+      flag.restart();
+      key.restart();
+    }
     console.log(steps.contents);
     console.log(loops.contents);
     const flattenedSteps = _flattenSteps(steps.contents, loops.contents);
@@ -314,9 +298,6 @@ function _flattenSteps(stepList, loopList) {
     return acc;
   }, [])
 
-  console.log(`flattened result`)
-  console.log(result);
-
   return result;
 }
 
@@ -328,7 +309,6 @@ function _checkKeyObtained(cat, key, keys, flag) {
       arrow.set('key');
     })
     flag.setLocked(false);
-    if (flag) flag.debug();
   }
 }
 
