@@ -6,6 +6,7 @@ import { ClickableArrow } from '../components/ClickableArrow.js';
 import { ControlPanel } from '../components/controlPanel.js';
 import { Flag } from "../components/Flag.js";
 import { Key } from '../components/Key.js';
+import StartScene from './startScene.js';
 
 
 export default function Level3() {
@@ -81,7 +82,7 @@ export default function Level3() {
       text: "next",
       mode: "CENTER",
       style: buttonM,
-      onPress: () => console.log(`redirect to next game`),
+      onPress: () => this.sceneManager.showScene(StartScene),
     });
 
     blocks = new ControlPanel({
