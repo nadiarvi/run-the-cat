@@ -175,19 +175,26 @@ export default function Level3() {
     _checkKeyObtained(cat, key, keys, flag);
     if (key && !key.obtained) key.draw();
 
-    if (cat.sprite && flag.sprite) {
-      if (key && key.getObtain()) {
-        flag.setColliderMode('none');
+    // if (cat.sprite && flag.sprite) {
+    //   if (key && key.getObtain()) {
+    //     flag.setColliderMode('none');
 
-        if (cat.sprite.overlaps(flag.sprite)) {
+    //     if (cat.sprite.overlaps(flag.sprite)) {
+    //     levelFinished = true;
+    //   };
+    //   } else {
+    //     flag.setColliderMode('static');
+    //   }
+    // };
+
+    if (cat.sprite && flag.sprite) {
+      // Only finish if key is obtained
+      if (cat.sprite.overlaps(flag.sprite) && key && key.obtained) {
         levelFinished = true;
-      };
-      } else {
-        flag.setColliderMode('static');
       }
     };
     
-    if (levelFinished) _finishGame(nextButton);
+    if (levelFinished) _drawFinishGame(nextButton);
   };
 
   this.onResize = () => {
@@ -325,7 +332,7 @@ function _checkKeyObtained(cat, key, keys, flag) {
   }
 }
 
-function _finishGame(nextButton){
+function _drawFinishGame(nextButton){
   push();
   fill(35, 20, 45, 190);
   rectMode(CORNER);

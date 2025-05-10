@@ -24,7 +24,7 @@ export class Flag {
               this.y - this.size * 0.8,
               this.size,
               this.size,
-              "dynamic"
+              "none"
             );
             this.sprite.layer = -1;
             this.sprite.spriteSheet = img;
