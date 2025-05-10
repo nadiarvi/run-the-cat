@@ -28,6 +28,7 @@ export class Cat {
       this.size = img.height / 5;
 
       this.sprite = new Sprite(this.x, this.y, this.size, this.size, 'dynamic');
+      console.log(`sprite made at ${this.x}, ${this.y}`);
       this.sprite.rotationLock = true;
       this.sprite.bounciness = 0.1;
       this.sprite.spriteSheet = img;
@@ -187,23 +188,24 @@ export class Cat {
 
     this.sprite.x = this.x;
     this.sprite.y = this.y;
+    console.log(`sprite re-made at ${this.x}, ${this.y}`);
     this.sprite.vel.x = 0;
     this.sprite.vel.y = 0;
 
-    this.sprite.scale = this.targetSize / this.size;
-    this.sprite.mirror.x = false;
-    this.sprite.rotation = 0;
-    this.sprite.rotationSpeed = 0;
+    // this.sprite.scale = this.targetSize / this.size;
+    // this.sprite.mirror.x = false;
+    // this.sprite.rotation = 0;
+    // this.sprite.rotationSpeed = 0;
 
-    this.sprite.anis.offset.x = this.shiftOffset + this.targetSize / 4;
+    // this.sprite.anis.offset.x = this.shiftOffset + this.targetSize / 4;
     
     this.steps = [];
     this.currentStepIndex = 0;
     this.isMoving = false;
     this.stepTimer = 0;
     this.moveDirection = null;
-    this.targetX = null;
-    this.targetY = null;
+    // this.targetX = null;
+    // this.targetY = null;
     
     this.changeAni('i');
   }
@@ -227,7 +229,7 @@ export class Cat {
     let h = this.sprite.height;
 
     rectMode(CENTER);
-    // rect(this.sprite.x, this.sprite.y, w, h);
+    rect(this.sprite.x, this.sprite.y, w, h);
   };
 
   changeAni(key) {
