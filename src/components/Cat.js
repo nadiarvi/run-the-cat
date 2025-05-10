@@ -79,8 +79,8 @@ export class Cat {
     this.isMoving = true;
 
     if (direction === 'right') {
+      this.sprite.mirror.x = false;
       this.targetX = this.sprite.x + this.blockSize;
-      console.log(`dir: ${this.direction}, start: ${this.sprite.x}, end: ${this.targetX}`);
       this.targetY = this.sprite.y;
 
       this.sprite.vel.x = this.velocity;
@@ -89,8 +89,8 @@ export class Cat {
       this.lastDirection = 'right';
       this.changeAni('w');
     } else if (direction === 'left') {
+      this.sprite.mirror.x = true;
       this.targetX = this.sprite.x - this.blockSize;
-      console.log(`dir: ${this.direction}, start: ${this.sprite.x}, end: ${this.targetX}`);
       this.targetY = this.sprite.y;
 
       this.sprite.vel.x = -this.velocity;
@@ -101,7 +101,6 @@ export class Cat {
       
     } else if (direction === 'up') {
       this.targetX = this.sprite.x + (this.lastDirection === 'right' ? this.blockSize : -this.blockSize);
-      console.log(`dir: ${this.direction}, start: ${this.sprite.x}, end: ${this.targetX}`);
       this.targetY = this.sprite.y - this.blockSize;
 
       this.hasJumped = false;
@@ -121,23 +120,6 @@ export class Cat {
       }
     }
   }
-
-  _checkPlatform() {
-    if (!this.sprite) return false;
-
-    if (this.ground && Array.isArray(this.ground)) {
-      for (let block of this.ground) {
-        if (this.sprite.colliding(block)) return true;
-      }
-    }
-
-    if (this.obstacles && Array.isArray(this.obstacles)) {
-      for (let block of this.obstacles) {
-        if (this.sprite.colliding(block)) return true;
-      }
-    }
-    return false;
-  }
   
   _continueMovement() {
     this.stepTimer++;
@@ -145,12 +127,14 @@ export class Cat {
     let isOnPlatform = this._checkPlatform();
   
     if (this.moveDirection === 'right') {
+      this.sprite.mirror.x = false;
       this.changeAni('w');
       this.sprite.vel.x = this.velocity - 0.70;
       this.lastDirection = 'right';
     }
   
     if (this.moveDirection === 'left') {
+      this.sprite.mirror.x = true;
       this.changeAni('w');
       this.sprite.vel.x = -this.velocity - 0.70;
       this.lastDirection = 'left';
@@ -178,9 +162,24 @@ export class Cat {
       this.changeAni('i');
     }
   }
-  
-  
 
+  _checkPlatform() {
+    if (!this.sprite) return false;
+
+    if (this.ground && Array.isArray(this.ground)) {
+      for (let block of this.ground) {
+        if (this.sprite.colliding(block)) return true;
+      }
+    }
+
+    if (this.obstacles && Array.isArray(this.obstacles)) {
+      for (let block of this.obstacles) {
+        if (this.sprite.colliding(block)) return true;
+      }
+    }
+    return false;
+  }
+  
   restart() {
     console.log('resetting initial position.....');
 
@@ -190,6 +189,13 @@ export class Cat {
     this.sprite.y = this.y;
     this.sprite.vel.x = 0;
     this.sprite.vel.y = 0;
+
+    this.sprite.scale = this.targetSize / this.size;
+    this.sprite.mirror.x = false;
+    this.sprite.rotation = 0;
+    this.sprite.rotationSpeed = 0;
+
+    this.sprite.anis.offset.x = this.shiftOffset + this.targetSize / 4;
     
     this.steps = [];
     this.currentStepIndex = 0;
@@ -200,10 +206,6 @@ export class Cat {
     this.targetY = null;
     
     this.changeAni('i');
-
-    setTimeout(() => {
-      console.log('finish resetting...')
-    }, 1000);
   }
   
 
