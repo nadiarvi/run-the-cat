@@ -68,7 +68,7 @@ cd run-the-cat
 3. Install dependencies and start the game:
 ```bash
 npm install
-npm start
+npm run dev
 ```
 ## 🔧 Code Structure
 
