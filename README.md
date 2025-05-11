@@ -4,7 +4,7 @@
   <a href="https://github.com/nadiarvi/run-the-cat">
     <img src="https://img.shields.io/badge/github-repo?logo=github&label=Project%20Repository" alt="Github Repo">
   </a>
-  <a href="https://www.youtube.com/">
+  <a href="https://youtu.be/VV65VTHZCwg">
     <img src="https://img.shields.io/badge/YouTube-Game%20Demo-FF0000?logo=youtube&logoColor=white" alt="Game Demo">
   </a>
 </div>
@@ -140,6 +140,9 @@ run-the-cat/
 
 - **Clickable Background After Completion**  
   When a level is completed and the overlay is displayed, the background remains interactive. This allows players to accidentally trigger cat movement even though the game should not be playable.
+
+- **Sprite Can Move Outside the Frame**  
+  When the Cat sprite moves beyond the visible frame, it becomes unresponsive to controls. Currently, there is no boundary-checking logic implemented to prevent the sprite from leaving the playable area.
 
 ## ✨ Special Features
 
