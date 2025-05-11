@@ -22,7 +22,7 @@ function setup(){
     mgr.addScene(Level2);
     mgr.addScene(Level3);
 
-    mgr.showScene(Level3);
+    mgr.showScene(StartScene);
 };
 
 function draw(){
