@@ -73,7 +73,7 @@ npm start
 ## 🔧 Code Structure
 
 <div align="center">
-  <img src="public/assets/docs/uml.png" alt="Snippet of the Game" width="90%"/>
+  <img src='./public/assets/docs/uml.png' width="90%"/>
   <p>Figure 2. UML Diagram and Class Relations<br>
 </div>
 
